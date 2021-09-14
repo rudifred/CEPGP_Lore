@@ -1,11 +1,11 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP");
+local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP_Lore");
 
 function CEPGP_initialise()
 	_, _, _, CEPGP_Info.ElvUI = GetAddOnInfo("ElvUI");
 	if not CEPGP_Info.ElvUI then CEPGP_Info.ElvUI = GetAddOnInfo("TukUI"); end
 	_G["CEPGP_version_number"]:SetText("Running Version: " .. CEPGP_Info.Version.Number .. " " .. CEPGP_Info.Version.Build);
 	
-	C_ChatInfo.RegisterAddonMessagePrefix("CEPGP");
+	C_ChatInfo.RegisterAddonMessagePrefix("CEPGP_Lore");
 	tinsert(UISpecialFrames, "CEPGP_frame");
 	tinsert(UISpecialFrames, "CEPGP_context_popup");
 	tinsert(UISpecialFrames, "CEPGP_save_guild_logs");
@@ -24,7 +24,7 @@ function CEPGP_initialise()
 	hooksecurefunc("ChatFrame_OnHyperlinkShow", CEPGP_addGPHyperlink);
 	hooksecurefunc("GameTooltip_UpdateStyle", CEPGP_addGPTooltip);
 	
-	if not CEPGP.Notice then
+	if not CEPGP_Lore.Notice then
 		CEPGP_notice_frame:Show();
 	end
 	
@@ -82,23 +82,23 @@ function CEPGP_initialise()
 	}]]
 	
 	C_Timer.After(5, function()
-		for k, v in pairs(CEPGP.Overrides) do
+		for k, v in pairs(CEPGP_Lore.Overrides) do
 			if string.find(k, "item:") then
 				local args = CEPGP_split(k, ":");
 				if tonumber(args[10]) then
 					local id = CEPGP_getItemID(CEPGP_getItemString(k));
 					local function swap()
-						CEPGP.Overrides[link] = v;
-						CEPGP.Overrides[k] = nil;
+						CEPGP_Lore.Overrides[link] = v;
+						CEPGP_Lore.Overrides[k] = nil;
 					end
 					local link = CEPGP_getItemLink(id, swap);
 				end
 			end
 		end
 		DEFAULT_CHAT_FRAME:AddMessage("|c00FFC100Classic EPGP Version: " .. CEPGP_Info.Version.Number .. " " .. CEPGP_Info.Version.Build .. " Loaded|r");
-		if CEPGP.ChangelogVersion ~= CEPGP_Info.Version.Number then
+		if CEPGP_Lore.ChangelogVersion ~= CEPGP_Info.Version.Number then
 			CEPGP_print("A new version has been installed.");
-			CEPGP.ChangelogVersion = CEPGP_Info.Version.Number;
+			CEPGP_Lore.ChangelogVersion = CEPGP_Info.Version.Number;
 		end
 		C_Timer.After(3, function() CEPGP_initMessageQueue(); end);
 	end);
@@ -129,20 +129,20 @@ end
 function CEPGP_initSavedVars()
 	
 	--[[	Unused Vars		]]--
-	if CEPGP.Loot then
-		CEPGP.Loot.Keyword = nil;
+	if CEPGP_Lore.Loot then
+		CEPGP_Lore.Loot.Keyword = nil;
 	end
 	
 	--[[	General Vars	]]--
 	
-	CEPGP.Minimap = CEPGP.Minimap or {
+	CEPGP_Lore.Minimap = CEPGP_Lore.Minimap or {
 		["hide"] = false
 	};
 	
-	CEPGP.Channel = CEPGP.Channel or "Guild";
-	CEPGP.Exclusions = CEPGP.Exclusions or {false,false,false,false,false,false,false,false,false,false};
-	CEPGP.PollRate = CEPGP.PollRate or 0.0001;
-	CEPGP.Sync = CEPGP.Sync or {false, {
+	CEPGP_Lore.Channel = CEPGP_Lore.Channel or "Guild";
+	CEPGP_Lore.Exclusions = CEPGP_Lore.Exclusions or {false,false,false,false,false,false,false,false,false,false};
+	CEPGP_Lore.PollRate = CEPGP_Lore.PollRate or 0.0001;
+	CEPGP_Lore.Sync = CEPGP_Lore.Sync or {false, {
 			[0] = false,
 			[1] = false,
 			[2] = false,
@@ -156,77 +156,77 @@ function CEPGP_initSavedVars()
 		}
 	};
 	
-	if type(CEPGP.Sync[2]) ~= "table" then
-		local enabledRank = CEPGP.Sync[2];
-		CEPGP.Sync[2] = {};
+	if type(CEPGP_Lore.Sync[2]) ~= "table" then
+		local enabledRank = CEPGP_Lore.Sync[2];
+		CEPGP_Lore.Sync[2] = {};
 		for i = 0, 9 do
 			if i == enabledRank then
-				CEPGP.Sync[2][i] = true;
+				CEPGP_Lore.Sync[2][i] = true;
 			else
-				CEPGP.Sync[2][i] = false;
+				CEPGP_Lore.Sync[2][i] = false;
 			end
 		end
 	end
 	
-	CEPGP.Decay = CEPGP.Decay or {Separate = false};
+	CEPGP_Lore.Decay = CEPGP_Lore.Decay or {Separate = false};
 	CEPGP_Info.Logs = {};
 	
 	--[[	Guild Frame		]]--
 	
-	CEPGP.Attendance = CEPGP.Attendance or {};
-	CEPGP.Backups = CEPGP.Backups or {};
-	CEPGP.Traffic = CEPGP.Traffic or {};
+	CEPGP_Lore.Attendance = CEPGP_Lore.Attendance or {};
+	CEPGP_Lore.Backups = CEPGP_Lore.Backups or {};
+	CEPGP_Lore.Traffic = CEPGP_Lore.Traffic or {};
 	
 	--[[	EP States	]]--
-	CEPGP.EP = CEPGP.EP or {};
+	CEPGP_Lore.EP = CEPGP_Lore.EP or {};
 	
-	CEPGP.EP.BossEP = CEPGP.EP.BossEP or {};
+	CEPGP_Lore.EP.BossEP = CEPGP_Lore.EP.BossEP or {};
 	
-	if not CEPGP.EP.AutoAward then
-		CEPGP.EP.AutoAward = {};
+	if not CEPGP_Lore.EP.AutoAward then
+		CEPGP_Lore.EP.AutoAward = {};
 		for bossName, state in pairs(CEPGP_EncounterInfo.Bosses) do
-			CEPGP.EP.AutoAward[bossName] = state;
+			CEPGP_Lore.EP.AutoAward[bossName] = state;
 		end
 	end
 	
 	for bossName, EP in pairs(CEPGP_EncounterInfo.Bosses) do
-		CEPGP.EP.BossEP[bossName] = CEPGP.EP.BossEP[bossName] or EP;
+		CEPGP_Lore.EP.BossEP[bossName] = CEPGP_Lore.EP.BossEP[bossName] or EP;
 	end
 	
-	CEPGP.EP.BossEP["Edge of Madness"] = CEPGP.EP.BossEP["Edge of Madness"] or CEPGP.EP.BossEP["Renataki"] or CEPGP_EncounterInfo.Bosses["Edge of Madness"];
-	CEPGP.EP.BossEP["Lord Kazzak"] = CEPGP.EP.BossEP["Lord Kazzak"] or CEPGP.EP.BossEP["Doom Lord Kazzak"]  or CEPGP_EncounterInfo.Bosses["Lord Kazzak"];
-	CEPGP.EP.BossEP["The Twin Emperors"] = CEPGP.EP.BossEP["The Twin Emperors"] or CEPGP.EP.BossEP["Twin Emperors"] or CEPGP_EncounterInfo.Bosses["The Twin Emperors"];
-	CEPGP.EP.BossEP["The Silithid Royalty"] = CEPGP.EP.BossEP["The Silithid Royalty"] or CEPGP.EP.BossEP["Silithid Royalty"] or CEPGP_EncounterInfo.Bosses["The Silithid Royalty"];
+	CEPGP_Lore.EP.BossEP["Edge of Madness"] = CEPGP_Lore.EP.BossEP["Edge of Madness"] or CEPGP_Lore.EP.BossEP["Renataki"] or CEPGP_EncounterInfo.Bosses["Edge of Madness"];
+	CEPGP_Lore.EP.BossEP["Lord Kazzak"] = CEPGP_Lore.EP.BossEP["Lord Kazzak"] or CEPGP_Lore.EP.BossEP["Doom Lord Kazzak"]  or CEPGP_EncounterInfo.Bosses["Lord Kazzak"];
+	CEPGP_Lore.EP.BossEP["The Twin Emperors"] = CEPGP_Lore.EP.BossEP["The Twin Emperors"] or CEPGP_Lore.EP.BossEP["Twin Emperors"] or CEPGP_EncounterInfo.Bosses["The Twin Emperors"];
+	CEPGP_Lore.EP.BossEP["The Silithid Royalty"] = CEPGP_Lore.EP.BossEP["The Silithid Royalty"] or CEPGP_Lore.EP.BossEP["Silithid Royalty"] or CEPGP_EncounterInfo.Bosses["The Silithid Royalty"];
 	
-	CEPGP.EP.BossEP["Renataki"] = nil;
-	CEPGP.EP.BossEP["Wushoolay"] = nil;
-	CEPGP.EP.BossEP["Gri'lek"] = nil;
-	CEPGP.EP.BossEP["Hazza'rah"] = nil;
-	CEPGP.EP.BossEP["Doom Lord Kazzak"] = nil;
-	CEPGP.EP.BossEP["The Edge of Madness"] = nil;
+	CEPGP_Lore.EP.BossEP["Renataki"] = nil;
+	CEPGP_Lore.EP.BossEP["Wushoolay"] = nil;
+	CEPGP_Lore.EP.BossEP["Gri'lek"] = nil;
+	CEPGP_Lore.EP.BossEP["Hazza'rah"] = nil;
+	CEPGP_Lore.EP.BossEP["Doom Lord Kazzak"] = nil;
+	CEPGP_Lore.EP.BossEP["The Edge of Madness"] = nil;
 	
-	CEPGP.EP.AutoAward["Renataki"] = nil;
-	CEPGP.EP.AutoAward["Wushoolay"] = nil;
-	CEPGP.EP.AutoAward["Gri'lek"] = nil;
-	CEPGP.EP.AutoAward["Hazza'rah"] = nil;
-	CEPGP.EP.AutoAward["Doom Lord Kazzak"] = nil;
-	CEPGP.EP.AutoAward["The Edge of Madness"] = nil;
+	CEPGP_Lore.EP.AutoAward["Renataki"] = nil;
+	CEPGP_Lore.EP.AutoAward["Wushoolay"] = nil;
+	CEPGP_Lore.EP.AutoAward["Gri'lek"] = nil;
+	CEPGP_Lore.EP.AutoAward["Hazza'rah"] = nil;
+	CEPGP_Lore.EP.AutoAward["Doom Lord Kazzak"] = nil;
+	CEPGP_Lore.EP.AutoAward["The Edge of Madness"] = nil;
 	
-	CEPGP.EP.BossEP["Silithid Royalty"] = nil;
-	CEPGP.EP.BossEP["Twin Emperors"] = nil;
+	CEPGP_Lore.EP.BossEP["Silithid Royalty"] = nil;
+	CEPGP_Lore.EP.BossEP["Twin Emperors"] = nil;
 	
-	CEPGP.EP.AutoAward["Silithid Royalty"] = nil;
-	CEPGP.EP.AutoAward["Twin Emperors"] = nil;
+	CEPGP_Lore.EP.AutoAward["Silithid Royalty"] = nil;
+	CEPGP_Lore.EP.AutoAward["Twin Emperors"] = nil;
 	
-	CEPGP.EP.BossEP["Highlord Mograine"] = nil;
-	CEPGP.EP.BossEP["Thane Korth'azz"] = nil;
-	CEPGP.EP.BossEP["Lady Blaumeux"] = nil;
-	CEPGP.EP.BossEP["Sir Zeliek"] = nil;
+	CEPGP_Lore.EP.BossEP["Highlord Mograine"] = nil;
+	CEPGP_Lore.EP.BossEP["Thane Korth'azz"] = nil;
+	CEPGP_Lore.EP.BossEP["Lady Blaumeux"] = nil;
+	CEPGP_Lore.EP.BossEP["Sir Zeliek"] = nil;
 	
-	CEPGP.EP.AutoAward["Highlord Mograine"] = nil;
-	CEPGP.EP.AutoAward["Thane Korth'azz"] = nil;
-	CEPGP.EP.AutoAward["Lady Blaumeux"] = nil;
-	CEPGP.EP.AutoAward["Sir Zeliek"] = nil;
+	CEPGP_Lore.EP.AutoAward["Highlord Mograine"] = nil;
+	CEPGP_Lore.EP.AutoAward["Thane Korth'azz"] = nil;
+	CEPGP_Lore.EP.AutoAward["Lady Blaumeux"] = nil;
+	CEPGP_Lore.EP.AutoAward["Sir Zeliek"] = nil;
 	
 	
 	--[[	GP States	]]--
@@ -258,23 +258,23 @@ function CEPGP_initSavedVars()
 		["EXCEPTION"] = 1
 	};
 	
-	CEPGP.GP = CEPGP.GP or {};
+	CEPGP_Lore.GP = CEPGP_Lore.GP or {};
 	
-	CEPGP.GP.Base = CEPGP.GP.Base or 4.83;
-	CEPGP.GP.Min = CEPGP.GP.Min or 1;
-	CEPGP.GP.Mod = CEPGP.GP.Mod or 1;
-	CEPGP.GP.Multiplier = CEPGP.GP.Multiplier or 2;
-	CEPGP.GP.SlotWeights = CEPGP.GP.SlotWeights or {};
+	CEPGP_Lore.GP.Base = CEPGP_Lore.GP.Base or 4.83;
+	CEPGP_Lore.GP.Min = CEPGP_Lore.GP.Min or 1;
+	CEPGP_Lore.GP.Mod = CEPGP_Lore.GP.Mod or 1;
+	CEPGP_Lore.GP.Multiplier = CEPGP_Lore.GP.Multiplier or 2;
+	CEPGP_Lore.GP.SlotWeights = CEPGP_Lore.GP.SlotWeights or {};
 	
 	for slot, weight in pairs(slotDefaults) do
-		CEPGP.GP.SlotWeights[slot] = CEPGP.GP.SlotWeights[slot] or slotDefaults[slot];
+		CEPGP_Lore.GP.SlotWeights[slot] = CEPGP_Lore.GP.SlotWeights[slot] or slotDefaults[slot];
 	end
 	
-	CEPGP.GP.SlotWeights["RANGEDRIGHT"] = nil;
+	CEPGP_Lore.GP.SlotWeights["RANGEDRIGHT"] = nil;
 	
-	CEPGP.Overrides = CEPGP.Overrides or {};
+	CEPGP_Lore.Overrides = CEPGP_Lore.Overrides or {};
 	
-	CEPGP.GP.RaidModifiers = CEPGP.GP.RaidModifiers or {};
+	CEPGP_Lore.GP.RaidModifiers = CEPGP_Lore.GP.RaidModifiers or {};
 	
 	local RaidModifiers = {
 		["Molten Core"] = 100,
@@ -287,33 +287,33 @@ function CEPGP_initSavedVars()
 	};
 	
 	for raid, val in pairs(RaidModifiers) do
-		CEPGP.GP.RaidModifiers[raid] = CEPGP.GP.RaidModifiers[raid] or val;
+		CEPGP_Lore.GP.RaidModifiers[raid] = CEPGP_Lore.GP.RaidModifiers[raid] or val;
 	end
 	
 	--[[	Guild Management	]]--
 	
-	CEPGP.Guild = CEPGP.Guild or {};
+	CEPGP_Lore.Guild = CEPGP_Lore.Guild or {};
 	
-	CEPGP.Guild.Exclusions = CEPGP.Guild.Exclusions or CEPGP.Exclusions or {false,false,false,false,false,false,false,false,false,false};
-	CEPGP.Guild.Filter = CEPGP.Guild.Filter or {false,false,false,false,false,false,false,false,false,false};
+	CEPGP_Lore.Guild.Exclusions = CEPGP_Lore.Guild.Exclusions or CEPGP_Lore.Exclusions or {false,false,false,false,false,false,false,false,false,false};
+	CEPGP_Lore.Guild.Filter = CEPGP_Lore.Guild.Filter or {false,false,false,false,false,false,false,false,false,false};
 	
-	CEPGP.Exclusions = nil;
+	CEPGP_Lore.Exclusions = nil;
 	
 	--[[	Loot Management	]]--
 	
-	CEPGP.LootChannel = CEPGP.LootChannel or "Raid";
+	CEPGP_Lore.LootChannel = CEPGP_Lore.LootChannel or "Raid";
 	
-	CEPGP.Loot = CEPGP.Loot or {};
+	CEPGP_Lore.Loot = CEPGP_Lore.Loot or {};
 	
-	CEPGP.Loot.Announcement = CEPGP.Loot.Announcement or "Whisper me for loot";
-	CEPGP.Loot.MinThreshold = CEPGP.Loot.MinThreshold or 2;
+	CEPGP_Lore.Loot.Announcement = CEPGP_Lore.Loot.Announcement or "Whisper me for loot";
+	CEPGP_Lore.Loot.MinThreshold = CEPGP_Lore.Loot.MinThreshold or 2;
 	
 	--	Temporary measure to resolve a structural problem
-	CEPGP.Loot.MinThreshold = type(CEPGP.Loot.MinThreshold) == "number" and CEPGP.Loot.MinThreshold or 2;
+	CEPGP_Lore.Loot.MinThreshold = type(CEPGP_Lore.Loot.MinThreshold) == "number" and CEPGP_Lore.Loot.MinThreshold or 2;
 	
-	CEPGP.Loot.MinReq = CEPGP.Loot.MinReq or {false, 0};
-	CEPGP.Loot.RaidVisibility = (type(CEPGP.Loot.RaidVisibility) == "boolean" and {[1] = true, [2] = false}) or CEPGP.Loot.RaidVisibility or {[1] = true, [2] = false, [3] = {}};
-	CEPGP.Loot.RaidVisibility[3] = CEPGP.Loot.RaidVisibility[3] or {
+	CEPGP_Lore.Loot.MinReq = CEPGP_Lore.Loot.MinReq or {false, 0};
+	CEPGP_Lore.Loot.RaidVisibility = (type(CEPGP_Lore.Loot.RaidVisibility) == "boolean" and {[1] = true, [2] = false}) or CEPGP_Lore.Loot.RaidVisibility or {[1] = true, [2] = false, [3] = {}};
+	CEPGP_Lore.Loot.RaidVisibility[3] = CEPGP_Lore.Loot.RaidVisibility[3] or {
 		[0] = false,
 		[1] = false,
 		[2] = false,
@@ -327,74 +327,74 @@ function CEPGP_initSavedVars()
 	};
 	
 	
-	CEPGP.Loot.GUI = CEPGP.Loot.GUI or {};
-	CEPGP.Loot.GUI.Buttons = CEPGP.Loot.GUI.Buttons or {};
+	CEPGP_Lore.Loot.GUI = CEPGP_Lore.Loot.GUI or {};
+	CEPGP_Lore.Loot.GUI.Buttons = CEPGP_Lore.Loot.GUI.Buttons or {};
 	
-	CEPGP.Loot.GUI.Buttons[1] = CEPGP.Loot.GUI.Buttons[1] or {};
-	CEPGP.Loot.GUI.Buttons[1][1] = true;
-	CEPGP.Loot.GUI.Buttons[1][2] = CEPGP.Loot.GUI.Buttons[1][2] or CEPGP.Loot.GUI.Buttons[1][2] or "Main Spec";
-	CEPGP.Loot.GUI.Buttons[1][3] = CEPGP.Loot.GUI.Buttons[1][3] or CEPGP.Loot.GUI.Buttons[1][3] or 0;
-	CEPGP.Loot.GUI.Buttons[1][4] = CEPGP.Loot.GUI.Buttons[1][4] or CEPGP.Loot.GUI.Buttons[1][4] or "Need";
+	CEPGP_Lore.Loot.GUI.Buttons[1] = CEPGP_Lore.Loot.GUI.Buttons[1] or {};
+	CEPGP_Lore.Loot.GUI.Buttons[1][1] = true;
+	CEPGP_Lore.Loot.GUI.Buttons[1][2] = CEPGP_Lore.Loot.GUI.Buttons[1][2] or CEPGP_Lore.Loot.GUI.Buttons[1][2] or "Main Spec";
+	CEPGP_Lore.Loot.GUI.Buttons[1][3] = CEPGP_Lore.Loot.GUI.Buttons[1][3] or CEPGP_Lore.Loot.GUI.Buttons[1][3] or 0;
+	CEPGP_Lore.Loot.GUI.Buttons[1][4] = CEPGP_Lore.Loot.GUI.Buttons[1][4] or CEPGP_Lore.Loot.GUI.Buttons[1][4] or "Need";
 	
-	CEPGP.Loot.GUI.Buttons[2] = CEPGP.Loot.GUI.Buttons[2] or {};
-	CEPGP.Loot.GUI.Buttons[2][2] = CEPGP.Loot.GUI.Buttons[2][2] or CEPGP.Loot.GUI.Buttons[2][2] or "Off Spec";
-	CEPGP.Loot.GUI.Buttons[2][3] = CEPGP.Loot.GUI.Buttons[2][3] or CEPGP.Loot.GUI.Buttons[2][3] or 0;
-	CEPGP.Loot.GUI.Buttons[2][4] = CEPGP.Loot.GUI.Buttons[2][4] or CEPGP.Loot.GUI.Buttons[2][4] or "Greed";
+	CEPGP_Lore.Loot.GUI.Buttons[2] = CEPGP_Lore.Loot.GUI.Buttons[2] or {};
+	CEPGP_Lore.Loot.GUI.Buttons[2][2] = CEPGP_Lore.Loot.GUI.Buttons[2][2] or CEPGP_Lore.Loot.GUI.Buttons[2][2] or "Off Spec";
+	CEPGP_Lore.Loot.GUI.Buttons[2][3] = CEPGP_Lore.Loot.GUI.Buttons[2][3] or CEPGP_Lore.Loot.GUI.Buttons[2][3] or 0;
+	CEPGP_Lore.Loot.GUI.Buttons[2][4] = CEPGP_Lore.Loot.GUI.Buttons[2][4] or CEPGP_Lore.Loot.GUI.Buttons[2][4] or "Greed";
 	
-	CEPGP.Loot.GUI.Buttons[3] = CEPGP.Loot.GUI.Buttons[3] or {};
-	CEPGP.Loot.GUI.Buttons[3][2] = CEPGP.Loot.GUI.Buttons[3][2] or CEPGP.Loot.GUI.Buttons[3][2] or "Disenchant";
-	CEPGP.Loot.GUI.Buttons[3][3] = CEPGP.Loot.GUI.Buttons[3][3] or CEPGP.Loot.GUI.Buttons[3][3] or 0;
-	CEPGP.Loot.GUI.Buttons[3][4] = CEPGP.Loot.GUI.Buttons[3][4] or CEPGP.Loot.GUI.Buttons[3][4] or "Disenchant";
+	CEPGP_Lore.Loot.GUI.Buttons[3] = CEPGP_Lore.Loot.GUI.Buttons[3] or {};
+	CEPGP_Lore.Loot.GUI.Buttons[3][2] = CEPGP_Lore.Loot.GUI.Buttons[3][2] or CEPGP_Lore.Loot.GUI.Buttons[3][2] or "Disenchant";
+	CEPGP_Lore.Loot.GUI.Buttons[3][3] = CEPGP_Lore.Loot.GUI.Buttons[3][3] or CEPGP_Lore.Loot.GUI.Buttons[3][3] or 0;
+	CEPGP_Lore.Loot.GUI.Buttons[3][4] = CEPGP_Lore.Loot.GUI.Buttons[3][4] or CEPGP_Lore.Loot.GUI.Buttons[3][4] or "Disenchant";
 	
-	CEPGP.Loot.GUI.Buttons[4] = CEPGP.Loot.GUI.Buttons[4] or {};
-	CEPGP.Loot.GUI.Buttons[4][2] = CEPGP.Loot.GUI.Buttons[4][2] or CEPGP.Loot.GUI.Buttons[4][2] or "Minor Upgrade";
-	CEPGP.Loot.GUI.Buttons[4][3] = CEPGP.Loot.GUI.Buttons[4][3] or CEPGP.Loot.GUI.Buttons[4][3] or 0;
-	CEPGP.Loot.GUI.Buttons[4][4] = CEPGP.Loot.GUI.Buttons[4][4] or CEPGP.Loot.GUI.Buttons[4][4] or "Minor";
+	CEPGP_Lore.Loot.GUI.Buttons[4] = CEPGP_Lore.Loot.GUI.Buttons[4] or {};
+	CEPGP_Lore.Loot.GUI.Buttons[4][2] = CEPGP_Lore.Loot.GUI.Buttons[4][2] or CEPGP_Lore.Loot.GUI.Buttons[4][2] or "Minor Upgrade";
+	CEPGP_Lore.Loot.GUI.Buttons[4][3] = CEPGP_Lore.Loot.GUI.Buttons[4][3] or CEPGP_Lore.Loot.GUI.Buttons[4][3] or 0;
+	CEPGP_Lore.Loot.GUI.Buttons[4][4] = CEPGP_Lore.Loot.GUI.Buttons[4][4] or CEPGP_Lore.Loot.GUI.Buttons[4][4] or "Minor";
 	
-	CEPGP.Loot.GUI.Buttons[5] = CEPGP.Loot.GUI.Buttons[5] or CEPGP.Loot.GUI.Buttons[5];
-	CEPGP.Loot.GUI.Buttons[6] = CEPGP.Loot.GUI.Buttons[6] or CEPGP.Loot.GUI.Buttons[6];
+	CEPGP_Lore.Loot.GUI.Buttons[5] = CEPGP_Lore.Loot.GUI.Buttons[5] or CEPGP_Lore.Loot.GUI.Buttons[5];
+	CEPGP_Lore.Loot.GUI.Buttons[6] = CEPGP_Lore.Loot.GUI.Buttons[6] or CEPGP_Lore.Loot.GUI.Buttons[6];
 	
-	CEPGP.Loot.GUI.Timer = CEPGP.Loot.GUI.Timer or 0;
+	CEPGP_Lore.Loot.GUI.Timer = CEPGP_Lore.Loot.GUI.Timer or 0;
 	
-	CEPGP.Loot.ExtraKeywords = CEPGP.Loot.ExtraKeywords or {};
-	CEPGP.Loot.ExtraKeywords.Keywords = CEPGP.Loot.ExtraKeywords.Keywords or {};
+	CEPGP_Lore.Loot.ExtraKeywords = CEPGP_Lore.Loot.ExtraKeywords or {};
+	CEPGP_Lore.Loot.ExtraKeywords.Keywords = CEPGP_Lore.Loot.ExtraKeywords.Keywords or {};
 	
 	--[[	Alt Management	]]--
-	CEPGP.Alt = CEPGP.Alt or {
+	CEPGP_Lore.Alt = CEPGP_Lore.Alt or {
 		SyncEP = true,
 		SyncGP = true
 	};
-	CEPGP.Alt.Links = CEPGP.Alt.Links or {};
+	CEPGP_Lore.Alt.Links = CEPGP_Lore.Alt.Links or {};
 	
 	--[[	Standby Settings	]]--
 	
-	CEPGP.Standby = CEPGP.Standby or {};
+	CEPGP_Lore.Standby = CEPGP_Lore.Standby or {};
 	
-	CEPGP.Standby.Keyword = CEPGP.Standby.Keyword or "!standby";
-	CEPGP.Standby.Percent = CEPGP.Standby.Percent or 100;
-	CEPGP.Standby.Ranks = CEPGP.Standby.Ranks or {false,false,false,false,false,false,false,false,false,false};
-	CEPGP.Standby.Roster = CEPGP.Standby.Roster or {};
+	CEPGP_Lore.Standby.Keyword = CEPGP_Lore.Standby.Keyword or "!standby";
+	CEPGP_Lore.Standby.Percent = CEPGP_Lore.Standby.Percent or 100;
+	CEPGP_Lore.Standby.Ranks = CEPGP_Lore.Standby.Ranks or {false,false,false,false,false,false,false,false,false,false};
+	CEPGP_Lore.Standby.Roster = CEPGP_Lore.Standby.Roster or {};
 	
 	for i = 1, 10 do
 		--	Really not sure how this structure mismatch hasn't been an issue yet but whatever
-		if type(CEPGP.Standby.Ranks[i]) == "table" then
-			local state = CEPGP.Standby.Ranks[i][2];
-			CEPGP.Standby.Ranks[i] = state;
+		if type(CEPGP_Lore.Standby.Ranks[i]) == "table" then
+			local state = CEPGP_Lore.Standby.Ranks[i][2];
+			CEPGP_Lore.Standby.Ranks[i] = state;
 		end
 	end
 	
-	if not CEPGP.Standby.ByRank and not CEPGP.Standby.Manual then
-		CEPGP.Standby.ByRank = true;
+	if not CEPGP_Lore.Standby.ByRank and not CEPGP_Lore.Standby.Manual then
+		CEPGP_Lore.Standby.ByRank = true;
 	end
 	
 	--[[	Migration States	]]--
-	if not CEPGP.Migrated then
+	if not CEPGP_Lore.Migrated then
 		
-		CEPGP.Traffic = TRAFFIC or CEPGP.Traffic;
-		CEPGP.Attendance = CEPGP_raid_logs or CEPGP.Attendance;
-		CEPGP.Backups = RECORDS or CEPGP.Backups;
+		CEPGP_Lore.Traffic = TRAFFIC or CEPGP_Lore.Traffic;
+		CEPGP_Lore.Attendance = CEPGP_raid_logs or CEPGP_Lore.Attendance;
+		CEPGP_Lore.Backups = RECORDS or CEPGP_Lore.Backups;
 		
-		CEPGP.Migrated = true;
+		CEPGP_Lore.Migrated = true;
 		
 	end
 end
@@ -513,12 +513,12 @@ function CEPGP_addResponse(player, response, roll)
 	CEPGP_Info.Loot.ItemsTable[player] = CEPGP_Info.Loot.ItemsTable[player] or {};
 	
 	if CEPGP_Info.Loot.ItemsTable[player][3] then
-		if CEPGP.Loot.Resubmit then
+		if CEPGP_Lore.Loot.Resubmit then
 			CEPGP_Info.Loot.ItemsTable[player][3] = response;
 		end
 	else
 		CEPGP_Info.Loot.ItemsTable[player][3] = response;
-		if CEPGP_indexToLabel(response) or CEPGP_getResponse(response) or CEPGP_getResponseIndex(response) or (CEPGP.Loot.PassRolls and response == 6) or response < 6 then
+		if CEPGP_indexToLabel(response) or CEPGP_getResponse(response) or CEPGP_getResponseIndex(response) or (CEPGP_Lore.Loot.PassRolls and response == 6) or response < 6 then
 			CEPGP_Info.Loot.ItemsTable[player][4] = roll;
 		end
 	end	
@@ -528,14 +528,14 @@ function CEPGP_addResponse(player, response, roll)
 	
 	CEPGP_addAddonMsg("Acknowledge;" .. CEPGP_Info.Loot.GUID .. ";" .. response, "WHISPER", player);
 		--	Shares the loot distribution results with the raid / assists
-	if not CEPGP.Loot.DelayResponses then
+	if not CEPGP_Lore.Loot.DelayResponses then
 		CEPGP_sendLootMessage(message);
 	end
 	if player == UnitName("player") then
 		CEPGP_respond:Hide();
 	end
 	
-	if not CEPGP_Info.Loot.Expired and (CEPGP_ntgetn(CEPGP_Info.Loot.ItemsTable) >= CEPGP_Info.Loot.NumOnline and CEPGP.Loot.DelayResponses) then
+	if not CEPGP_Info.Loot.Expired and (CEPGP_ntgetn(CEPGP_Info.Loot.ItemsTable) >= CEPGP_Info.Loot.NumOnline and CEPGP_Lore.Loot.DelayResponses) then
 		CEPGP_announceResponses();
 	end
 end
@@ -572,11 +572,11 @@ function CEPGP_announceResponses()
 		for index, name in ipairs(responses[label]) do
 			local EP, GP, PR, roll;
 			if CEPGP_Info.Loot.ItemsTable[name][3] ~= 5 and CEPGP_Info.Loot.ItemsTable[name][3] ~= 6 then	--	Ensures that misc responses and passes are not announced
-				if CEPGP.Loot.DelayResponses and CEPGP.Loot.PRWithDelay then
+				if CEPGP_Lore.Loot.DelayResponses and CEPGP_Lore.Loot.PRWithDelay then
 					EP, GP = CEPGP_getEPGP(name);
 					PR = math.floor((tonumber(EP)*100/tonumber(GP)))/100;
 				end
-				if CEPGP.Loot.DelayResponses and CEPGP.Loot.RollWithDelay then
+				if CEPGP_Lore.Loot.DelayResponses and CEPGP_Lore.Loot.RollWithDelay then
 					roll = CEPGP_Info.Loot.ItemsTable[name][4];
 				end
 				if #(msg .. name .. (PR and " (PR " .. PR .. ")" or "") .. (roll and " (Roll " .. roll .. ")" or "")) > 249 then
@@ -587,7 +587,7 @@ function CEPGP_announceResponses()
 				end
 			end
 			local message = "!need;"..name..";"..CEPGP_Info.Loot.DistributionID..";"..CEPGP_Info.Loot.ItemsTable[name][3]..";"..CEPGP_Info.Loot.ItemsTable[name][4];
-			if CEPGP.Loot.DelayResponses then
+			if CEPGP_Lore.Loot.DelayResponses then
 				CEPGP_sendLootMessage(message);
 			end
 		end
@@ -600,7 +600,7 @@ end
 function CEPGP_sendLootMessage(message)
 	local announceRanks = {};
 	--	Identify which guild ranks should be included
-	for rank, state in pairs(CEPGP.Loot.RaidVisibility[3]) do
+	for rank, state in pairs(CEPGP_Lore.Loot.RaidVisibility[3]) do
 		if state then
 			table.insert(announceRanks, rank);
 		end
@@ -615,7 +615,7 @@ function CEPGP_sendLootMessage(message)
 			local rank;
 			if CEPGP_Info.Guild.Roster[name] then
 				rank = CEPGP_Info.Guild.Roster[name][4];
-				if CEPGP.Loot.RaidVisibility[3][rank] then
+				if CEPGP_Lore.Loot.RaidVisibility[3][rank] then
 					table.insert(players, name);
 				end
 			end
@@ -627,15 +627,15 @@ function CEPGP_sendLootMessage(message)
 		end, limit);
 	end
 	
-	if CEPGP.Loot.RaidVisibility[2] then
+	if CEPGP_Lore.Loot.RaidVisibility[2] then
 		CEPGP_addAddonMsg(message, "RAID");
-	elseif CEPGP.Loot.RaidVisibility[1] then
+	elseif CEPGP_Lore.Loot.RaidVisibility[1] then
 		CEPGP_messageGroup(message, "assists");
 	end
 end
 
 function CEPGP_getDiscount(label)
-	for l, v in pairs(CEPGP.Loot.ExtraKeywords.Keywords) do
+	for l, v in pairs(CEPGP_Lore.Loot.ExtraKeywords.Keywords) do
 		for _, discount in pairs(v) do
 			if l == label then
 				return tonumber(discount);
@@ -650,12 +650,12 @@ end
 
 function CEPGP_getResponse(keyword)
 	if not keyword then return end
-	for index, v in ipairs(CEPGP.Loot.GUI.Buttons) do
+	for index, v in ipairs(CEPGP_Lore.Loot.GUI.Buttons) do
 		if keyword == index then
 			return v[2];
 		end
 	end
-	for label, v in pairs(CEPGP.Loot.ExtraKeywords.Keywords) do
+	for label, v in pairs(CEPGP_Lore.Loot.ExtraKeywords.Keywords) do
 		for key, _ in pairs(v) do
 			if string.lower(keyword) == string.lower(key) then
 				return label;
@@ -666,7 +666,7 @@ end
 
 function CEPGP_getResponseIndex(keyword)
 	if not keyword then return; end
-	for index, v in ipairs(CEPGP.Loot.GUI.Buttons) do
+	for index, v in ipairs(CEPGP_Lore.Loot.GUI.Buttons) do
 		if string.lower(keyword) == string.lower(v[4]) then
 			return index;
 		end
@@ -674,7 +674,7 @@ function CEPGP_getResponseIndex(keyword)
 end
 
 function CEPGP_getLabelIndex(_label)
-	for index, v in ipairs(CEPGP.Loot.GUI.Buttons) do
+	for index, v in ipairs(CEPGP_Lore.Loot.GUI.Buttons) do
 		if _label == v[2] then
 			return index;
 		end
@@ -699,8 +699,8 @@ function CEPGP_calcGP(link, quantity, id)
 		local item = Item:CreateFromItemID(tonumber(id));
 		item:ContinueOnItemLoad(function()
 			name, link, rarity, ilvl, itemType, subType, _, _, slot, _, _, classID, subClassID = GetItemInfo(id);
-			if CEPGP.Overrides[name] then return CEPGP.Overrides[name]; end
-			if CEPGP.Overrides[CEPGP_getItemLink(id)] then return CEPGP.Overrides[CEPGP_getItemLink(id)]; end
+			if CEPGP_Lore.Overrides[name] then return CEPGP_Lore.Overrides[name]; end
+			if CEPGP_Lore.Overrides[CEPGP_getItemLink(id)] then return CEPGP_Lore.Overrides[CEPGP_getItemLink(id)]; end
 			
 			for _, k in pairs(CEPGP_tokens) do
 				for slotName, v in pairs(k) do
@@ -733,21 +733,21 @@ function CEPGP_calcGP(link, quantity, id)
 				CEPGP_print("Slot: " .. slot);
 			end
 			slot = strsub(slot,strfind(slot,"INVTYPE_")+8,string.len(slot));
-			slot = CEPGP.GP.SlotWeights[slot];
+			slot = CEPGP_Lore.GP.SlotWeights[slot];
 			
 			local raidscaling = 1;
 			
 			for raid, data in pairs(CEPGP_ItemDomain) do
 				for _, _id in pairs(data) do
 					if tonumber(id) == _id then
-						raidScaling = CEPGP.GP.RaidModifiers[raid]/100;
+						raidScaling = CEPGP_Lore.GP.RaidModifiers[raid]/100;
 						break;
 					end
 				end
 			end
 			
 			if ilvl and rarity and slot then
-				return math.floor((((CEPGP.GP.Base * (CEPGP.GP.Multiplier^((ilvl/26) + (rarity-4))) * slot)*CEPGP.GP.Mod)*quantity)*raidScaling);
+				return math.floor((((CEPGP_Lore.GP.Base * (CEPGP_Lore.GP.Multiplier^((ilvl/26) + (rarity-4))) * slot)*CEPGP_Lore.GP.Mod)*quantity)*raidScaling);
 			else
 				return 0;
 			end
@@ -755,12 +755,12 @@ function CEPGP_calcGP(link, quantity, id)
 	else
 		if not ilvl then ilvl = 0; end
 		
-		if CEPGP.Overrides[name] then return CEPGP.Overrides[name]; end
-		if CEPGP.Overrides[CEPGP_getItemLink(id)] then return CEPGP.Overrides[CEPGP_getItemLink(id)]; end
+		if CEPGP_Lore.Overrides[name] then return CEPGP_Lore.Overrides[name]; end
+		if CEPGP_Lore.Overrides[CEPGP_getItemLink(id)] then return CEPGP_Lore.Overrides[CEPGP_getItemLink(id)]; end
 		--local compare = "item[%-?" .. id .. ":]+";
-		--return CEPGP.Overrides[compare];
+		--return CEPGP_Lore.Overrides[compare];
 		
-		--for k, v in pairs(CEPGP.Overrides) do
+		--for k, v in pairs(CEPGP_Lore.Overrides) do
 		
 			--[[local compName = GetItemInfo(k);
 			if compName == name then
@@ -799,21 +799,21 @@ function CEPGP_calcGP(link, quantity, id)
 			CEPGP_print("Slot: " .. slot);
 		end
 		slot = strsub(slot,strfind(slot,"INVTYPE_")+8,string.len(slot));
-		slot = CEPGP.GP.SlotWeights[slot];
+		slot = CEPGP_Lore.GP.SlotWeights[slot];
 		
 		local raidScaling = 1;
 
 		for raid, data in pairs(CEPGP_ItemDomain) do
 			for _, _id in pairs(data) do
 				if tonumber(id) == _id then
-					raidScaling = CEPGP.GP.RaidModifiers[raid]/100;
+					raidScaling = CEPGP_Lore.GP.RaidModifiers[raid]/100;
 					break;
 				end
 			end
 		end
 		
 		if ilvl and rarity and slot then
-			return math.floor((((CEPGP.GP.Base * (CEPGP.GP.Multiplier^((ilvl/26) + (rarity-4))) * slot)*CEPGP.GP.Mod)*quantity)*raidScaling);
+			return math.floor((((CEPGP_Lore.GP.Base * (CEPGP_Lore.GP.Multiplier^((ilvl/26) + (rarity-4))) * slot)*CEPGP_Lore.GP.Mod)*quantity)*raidScaling);
 		else
 			return 0;
 		end
@@ -821,7 +821,7 @@ function CEPGP_calcGP(link, quantity, id)
 end
 
 function CEPGP_addGPTooltip(frame)
-	if not CEPGP.GP.Tooltips or not frame:GetItem() or frame:GetItem() == nil or frame:GetItem() == "" then return; end
+	if not CEPGP_Lore.GP.Tooltips or not frame:GetItem() or frame:GetItem() == nil or frame:GetItem() == "" then return; end
 	local _, link = frame:GetItem();
 	local id = CEPGP_getItemID(CEPGP_getItemString(link));
 	if not CEPGP_itemExists(tonumber(id)) then return; end
@@ -840,7 +840,7 @@ function CEPGP_addGPTooltip(frame)
 end
 
 function CEPGP_addGPHyperlink(self, iString)
-	if not string.find(iString, "item:") or not CEPGP.GP.Tooltips then return; end
+	if not string.find(iString, "item:") or not CEPGP_Lore.GP.Tooltips then return; end
 	local id = CEPGP_getItemID(iString);
 	local name = GetItemInfo(id);
 	for i = 1, ItemRefTooltip:NumLines() do
@@ -1055,10 +1055,10 @@ function CEPGP_rosterUpdate(event)
 			CEPGP_Info.Guild.Rescan = true;
 			return;
 		end
-		--CEPGP_Info.LastUpdate = GetTime()+(CEPGP.PollRate*GetNumGuildMembers());
+		--CEPGP_Info.LastUpdate = GetTime()+(CEPGP_Lore.PollRate*GetNumGuildMembers());
 		CEPGP_Info.Guild.Polling = true;
 		CEPGP_Info.Version.List = CEPGP_Info.Version.List or {};
-		local pRate = CEPGP.PollRate;
+		local pRate = CEPGP_Lore.PollRate;
 		local quit = false;
 		--local timer = CEPGP_Info.LastUpdate;
 		--local numGuild = GetNumGuildMembers();
@@ -1126,9 +1126,9 @@ function CEPGP_rosterUpdate(event)
 		
 		local i = 0;
 		local limit = GetNumGuildMembers();
-		C_Timer.NewTicker(CEPGP.PollRate, function()
+		C_Timer.NewTicker(CEPGP_Lore.PollRate, function()
 			if quit then return; end
-			if pRate ~= CEPGP.PollRate then 
+			if pRate ~= CEPGP_Lore.PollRate then 
 				quit = true;
 				return;
 			end
@@ -1154,8 +1154,8 @@ function CEPGP_rosterUpdate(event)
 					[6] = PR,
 					[7] = classFileName,
 					[8] = online,
-					[9] = (CEPGP.Guild.Exclusions[rankIndex+1] and true or nil),
-					[10] = (CEPGP.Guild.Filter[rankIndex+1] and true or nil)
+					[9] = (CEPGP_Lore.Guild.Exclusions[rankIndex+1] and true or nil),
+					[10] = (CEPGP_Lore.Guild.Filter[rankIndex+1] and true or nil)
 				};
 				if CEPGP_Info.Import.Running or CEPGP_Info.Traffic.Sharing then
 					if CEPGP_Info.Import.Running and CEPGP_Info.Import.Source == name then
@@ -1230,19 +1230,19 @@ function CEPGP_rosterUpdate(event)
 		--for i = 1, GetNumGroupMembers() do
 		local limit = GetNumGroupMembers();
 		
-		C_Timer.NewTicker(CEPGP.PollRate, function()
+		C_Timer.NewTicker(CEPGP_Lore.PollRate, function()
 			i = i + 1;
 			local name = GetRaidRosterInfo(i);
 			
 			if not UnitInRaid("player") then
-				CEPGP.Standby.Roster = {};
+				CEPGP_Lore.Standby.Roster = {};
 				if CEPGP_standby_options:IsVisible() then
 					CEPGP_UpdateStandbyScrollBar();
 				end
 			else
-				for k, v in ipairs(CEPGP.Standby.Roster) do
+				for k, v in ipairs(CEPGP_Lore.Standby.Roster) do
 					if v[1] == name then
-						table.remove(CEPGP.Standby.Roster, k); --Removes player from standby list if they have joined the raid
+						table.remove(CEPGP_Lore.Standby.Roster, k); --Removes player from standby list if they have joined the raid
 						if CEPGP_isML() == 0 then
 							CEPGP_addAddonMsg("StandbyRemoved;" .. name .. ";You have been removed from the standby list because you have joined the raid.", "WHISPER", name);
 						end
@@ -1285,7 +1285,7 @@ function CEPGP_rosterUpdate(event)
 					[3] = rank,
 					[4] = 11,
 					[5] = 0,
-					[6] = CEPGP.GP.Min,
+					[6] = CEPGP_Lore.GP.Min,
 					[7] = 0,
 					[8] = classFileName,
 					[9] = isML
@@ -1358,7 +1358,7 @@ function CEPGP_addToStandby(player, playerList)
 		end
 	end
 	
-	for _, data in ipairs(CEPGP.Standby.Roster) do
+	for _, data in ipairs(CEPGP_Lore.Standby.Roster) do
 		local name = data[1];
 		if player and string.lower(player) == string.lower(name) then
 			CEPGP_print(name .. " is already on the standby list", true);
@@ -1367,7 +1367,7 @@ function CEPGP_addToStandby(player, playerList)
 		standbyRoster[name] = "";
 	end
 	
-	for main, data in pairs(CEPGP.Alt.Links) do
+	for main, data in pairs(CEPGP_Lore.Alt.Links) do
 		for _, alt in ipairs(data) do
 			alts[alt] = main;
 		end
@@ -1378,8 +1378,8 @@ function CEPGP_addToStandby(player, playerList)
 		if raidRoster[main] then	--	If an alt and a main are in the raid
 			CEPGP_print("The main of " .. player .. " is in the raid", true);
 		end
-		if CEPGP.Alt.Links[player] then	--	If the character is a main
-			for _, alt in ipairs(CEPGP.Alt.Links[player]) do
+		if CEPGP_Lore.Alt.Links[player] then	--	If the character is a main
+			for _, alt in ipairs(CEPGP_Lore.Alt.Links[player]) do
 				if raidRoster[alt] or standbyRoster[alt] then
 					CEPGP_print("An alt of " .. player .. " is already " .. (raidRoster[main] and "in the raid" or "on the standby list"), true);
 					return;
@@ -1407,9 +1407,9 @@ function CEPGP_addToStandby(player, playerList)
 			[8] = classFile
 		};
 		
-		table.insert(CEPGP.Standby.Roster, entry);
-		CEPGP.Standby.Roster = CEPGP_tSort(CEPGP.Standby.Roster, 1);
-		if CEPGP.Standby.Share then CEPGP_addAddonMsg("StandbyListAdd;"..player..";"..class..";"..rank..";"..rankIndex..";"..EP..";"..GP..";"..classFile, "RAID"); end
+		table.insert(CEPGP_Lore.Standby.Roster, entry);
+		CEPGP_Lore.Standby.Roster = CEPGP_tSort(CEPGP_Lore.Standby.Roster, 1);
+		if CEPGP_Lore.Standby.Share then CEPGP_addAddonMsg("StandbyListAdd;"..player..";"..class..";"..rank..";"..rankIndex..";"..EP..";"..GP..";"..classFile, "RAID"); end
 		CEPGP_addAddonMsg("StandbyAdded;" .. player .. ";You have been added to the standby list.", "GUILD");
 	
 	else --	If a list of players is being imported
@@ -1421,8 +1421,8 @@ function CEPGP_addToStandby(player, playerList)
 				valid = false;
 			end
 			
-			if CEPGP.Alt.Links[player] and valid then	--	If the character is a main, no point in checking if it's not valid
-				for _, alt in ipairs(CEPGP.Alt.Links[player]) do
+			if CEPGP_Lore.Alt.Links[player] and valid then	--	If the character is a main, no point in checking if it's not valid
+				for _, alt in ipairs(CEPGP_Lore.Alt.Links[player]) do
 					if raidRoster[alt] or standbyRoster[alt] then
 						valid = false;
 					end
@@ -1448,7 +1448,7 @@ function CEPGP_addToStandby(player, playerList)
 					[8] = classFile
 				};
 				
-				table.insert(CEPGP.Standby.Roster, entry);
+				table.insert(CEPGP_Lore.Standby.Roster, entry);
 			else
 				table.remove(playerList, index);
 			end
@@ -1627,17 +1627,17 @@ function CEPGP_getEPGP(name, index)
 	local offNote;
 	
 	index = CEPGP_getIndex(name, index);
-	if not index then return 0, CEPGP.GP.Min; end
+	if not index then return 0, CEPGP_Lore.GP.Min; end
 	_, _, _, _, _, _, _, offNote = GetGuildRosterInfo(index);
 	
 	local EP, GP = nil;
 	
 	if not CEPGP_checkEPGP(offNote) then
-		return 0, CEPGP.GP.Min;
+		return 0, CEPGP_Lore.GP.Min;
 	else
 		EP = tonumber(strsub(offNote, 1, strfind(offNote, ",")-1));
 		GP = tonumber(strsub(offNote, strfind(offNote, ",")+1, string.len(offNote)));
-		GP = math.max(math.floor(GP), CEPGP.GP.Min);
+		GP = math.max(math.floor(GP), CEPGP_Lore.GP.Min);
 		return EP, GP;
 	end
 end
@@ -1759,14 +1759,14 @@ function CEPGP_inOverride(link)
 	local id;
 	id = CEPGP_getItemID(CEPGP_getItemString(link));
 	if id then
-		for item, _ in pairs(CEPGP.Overrides) do
+		for item, _ in pairs(CEPGP_Lore.Overrides) do
 			local temp = CEPGP_getItemID(CEPGP_getItemString(item));
 			if id == temp then
 				return true;
 			end
 		end
 	else
-		if CEPGP.Overrides[link] then
+		if CEPGP_Lore.Overrides[link] then
 			return true;
 		end
 	end
@@ -1778,10 +1778,10 @@ function CEPGP_updateOverride(id)
 	id = tonumber(id);
 	local link = CEPGP_getItemLink(id);
 	local name = GetItemInfo(id);
-	for item, v in pairs(CEPGP.Overrides) do
+	for item, v in pairs(CEPGP_Lore.Overrides) do
 		if string.lower(name) == string.lower(item) then
-			CEPGP.Overrides[link] = v;
-			CEPGP.Overrides[item] = nil;
+			CEPGP_Lore.Overrides[link] = v;
+			CEPGP_Lore.Overrides[item] = nil;
 			return;
 		end
 	end
@@ -2055,17 +2055,17 @@ function CEPGP_recordAttendance()
 		CEPGP_print("You are not in a raid group", true);
 		return;
 	end
-	CEPGP.Attendance[#CEPGP.Attendance+1] = {
+	CEPGP_Lore.Attendance[#CEPGP_Lore.Attendance+1] = {
 		[1] = time()
 	};
 	for i = 1, GetNumGroupMembers(), 1 do
-		CEPGP.Attendance[#CEPGP.Attendance][i+1] = {
+		CEPGP_Lore.Attendance[#CEPGP_Lore.Attendance][i+1] = {
 			[1] = GetRaidRosterInfo(i),
 			[2] = false --Are they a standby player? Nope.
 		};
 	end
-	for k, v in ipairs(CEPGP.Standby.Roster) do
-		CEPGP.Attendance[#CEPGP.Attendance][#CEPGP.Attendance[#CEPGP.Attendance]+1] = { --CEPGP.Attendance[index][timestamp][1] = player name, [2] = bool
+	for k, v in ipairs(CEPGP_Lore.Standby.Roster) do
+		CEPGP_Lore.Attendance[#CEPGP_Lore.Attendance][#CEPGP_Lore.Attendance[#CEPGP_Lore.Attendance]+1] = { --CEPGP_Lore.Attendance[index][timestamp][1] = player name, [2] = bool
 			[1] = v[1],
 			[2] = true --Are they a standby player? YUP.
 		};
@@ -2080,12 +2080,12 @@ function CEPGP_deleteAttendance()
 		CEPGP_print("Select a snapshot and try again", true);
 		return;
 	end
-	CEPGP_print("Deleted snapshot: " .. date("%d/%m/%Y %H:%M", CEPGP.Attendance[index][1]));
-	local size = CEPGP_ntgetn(CEPGP.Attendance);
+	CEPGP_print("Deleted snapshot: " .. date("%d/%m/%Y %H:%M", CEPGP_Lore.Attendance[index][1]));
+	local size = CEPGP_ntgetn(CEPGP_Lore.Attendance);
 	for i = index, size-1 do
-		CEPGP.Attendance[index] = CEPGP.Attendance[index+1];
+		CEPGP_Lore.Attendance[index] = CEPGP_Lore.Attendance[index+1];
 	end
-	CEPGP.Attendance[size] = nil;
+	CEPGP_Lore.Attendance[size] = nil;
 	CEPGP_Info.Attendance.SelectedSnapshot = nil;
 	UIDropDownMenu_SetSelectedValue(CEPGP_attendance_dropdown, 0);
 	CEPGP_UpdateAttendanceScrollBar();
@@ -2171,7 +2171,7 @@ function CEPGP_calcAttendance(name)
 	local cMonth = 0; --count month
 	local cTwoMonth = 0; --count 2 months
 	local cThreeMonth = 0; --count 3 months
-	for _, v in pairs(CEPGP.Attendance) do
+	for _, v in pairs(CEPGP_Lore.Attendance) do
 		for i = 2, CEPGP_ntgetn(v), 1 do
 			local diff = time() - v[1];
 			diff = diff/60/60/24;
@@ -2225,7 +2225,7 @@ function CEPGP_calcAttIntervals()
 	local mon = 0;
 	local twoMon = 0;
 	local threeMon = 0;
-	for _, v in pairs(CEPGP.Attendance) do
+	for _, v in pairs(CEPGP_Lore.Attendance) do
 		local diff = time() - v[1];
 		diff = diff/60/60/24;
 		if diff <= 90 then
@@ -2262,7 +2262,7 @@ function CEPGP_callItem(id, gp, buttons, timeout)
 	local timer = timeout-1;
 	CEPGP_respond_timeout_string:Show();
 	CEPGP_distribute_time:Show();
-	if CEPGP.Loot.PRDifference then
+	if CEPGP_Lore.Loot.PRDifference then
 		CEPGP_respond_gp_change:Show();
 	else
 		CEPGP_respond_gp_change:Hide();
@@ -2286,7 +2286,7 @@ function CEPGP_callItem(id, gp, buttons, timeout)
 			end
 			if timer == 0 then
 				CEPGP_distribute_time:SetText("Response Time Expired");
-				if CEPGP_isML() == 0 and CEPGP.Loot.DelayResponses then
+				if CEPGP_isML() == 0 and CEPGP_Lore.Loot.DelayResponses then
 					CEPGP_announceResponses();
 				end
 				CEPGP_Info.Loot.Expired = true;
@@ -2321,7 +2321,7 @@ function CEPGP_callItem(id, gp, buttons, timeout)
 		local item = Item:CreateFromItemID(id);
 		item:ContinueOnItemLoad(function()
 				_, link, _, _, _, _, _, _, _, tex, _, classID, subClassID = GetItemInfo(id)
-				if not CEPGP_canEquip(classID, subClassID) and CEPGP.Loot.AutoPass then
+				if not CEPGP_canEquip(classID, subClassID) and CEPGP_Lore.Loot.AutoPass then
 					CEPGP_print("Cannot equip " .. link .. "|c006969FF. Passing on item.|r");
 					CEPGP_addAddonMsg("LootRsp;6", "WHISPER", CEPGP_Info.Loot.Master);
 					return;
@@ -2351,7 +2351,7 @@ function CEPGP_callItem(id, gp, buttons, timeout)
 				end
 			end);
 	else
-		if not CEPGP_canEquip(classID, subClassID) and CEPGP.Loot.AutoPass then
+		if not CEPGP_canEquip(classID, subClassID) and CEPGP_Lore.Loot.AutoPass then
 			CEPGP_print("Cannot equip " .. link .. "|c006969FF. Passing on item.|r");
 			CEPGP_addAddonMsg("LootRsp;6", "WHISPER", CEPGP_Info.Loot.Master);
 			return;
@@ -2482,7 +2482,7 @@ function CEPGP_toggleGPEdit(mode)
 		CEPGP_loot_options_pass_roll_check:Enable();
 		CEPGP_loot_options_announce_roll_check:Enable();
 		CEPGP_loot_options_resolve_roll_check:Enable();
-		for k, v in pairs(CEPGP.GP.SlotWeights) do
+		for k, v in pairs(CEPGP_Lore.GP.SlotWeights) do
 			if k ~= "ROBE" and k ~= "EXCEPTION" then
 				_G["CEPGP_options_" .. k .. "_weight"]:Enable();
 			end
@@ -2501,7 +2501,7 @@ function CEPGP_toggleGPEdit(mode)
 		CEPGP_loot_options_announce_roll_check:Disable();
 		CEPGP_loot_options_resolve_roll_check:Disable();
 		
-		for k, v in pairs(CEPGP.GP.SlotWeights) do
+		for k, v in pairs(CEPGP_Lore.GP.SlotWeights) do
 			if k ~= "ROBE" and k ~= "EXCEPTION" then
 				_G["CEPGP_options_" .. k .. "_weight"]:Disable();
 			end
@@ -2510,12 +2510,12 @@ function CEPGP_toggleGPEdit(mode)
 end
 
 function CEPGP_saveStandings(name)
-	if CEPGP.Backups[name] == nil or (CEPGP_Info.OverwriteLog and name == CEPGP_Info.RecordExists) then
-		CEPGP.Backups[name] = {};
+	if CEPGP_Lore.Backups[name] == nil or (CEPGP_Info.OverwriteLog and name == CEPGP_Info.RecordExists) then
+		CEPGP_Lore.Backups[name] = {};
 		SortGuildRoster(name);
 		for i = 1, GetNumGuildMembers(), 1 do
 			local _, _, _, _, _, _, _, oNote = GetGuildRosterInfo(i);
-			CEPGP.Backups[name][GetGuildRosterInfo(i)] = oNote;
+			CEPGP_Lore.Backups[name][GetGuildRosterInfo(i)] = oNote;
 		end
 		if CEPGP_Info.OverwriteLog then
 			CEPGP_print("Record overwritten [" .. name .. "]");
@@ -2682,7 +2682,7 @@ function CEPGP_addTraffic(target, source, desc, EPB, EPA, GPB, GPA, itemID, tSta
 			item:ContinueOnItemLoad(function()
 				itemLink = CEPGP_getItemLink(itemID);
 	
-				CEPGP.Traffic[#CEPGP.Traffic+1] = {
+				CEPGP_Lore.Traffic[#CEPGP_Lore.Traffic+1] = {
 					[1] = target,
 					[2] = source,
 					[3] = desc,
@@ -2698,7 +2698,7 @@ function CEPGP_addTraffic(target, source, desc, EPB, EPA, GPB, GPA, itemID, tSta
 				
 			end);
 		elseif itemLink then
-			CEPGP.Traffic[#CEPGP.Traffic+1] = {
+			CEPGP_Lore.Traffic[#CEPGP_Lore.Traffic+1] = {
 				[1] = target,
 				[2] = source,
 				[3] = desc,
@@ -2713,7 +2713,7 @@ function CEPGP_addTraffic(target, source, desc, EPB, EPA, GPB, GPA, itemID, tSta
 			};
 		end
 	else
-		CEPGP.Traffic[CEPGP_ntgetn(CEPGP.Traffic)+1] = {
+		CEPGP_Lore.Traffic[CEPGP_ntgetn(CEPGP_Lore.Traffic)+1] = {
 			[1] = target,
 			[2] = source,
 			[3] = desc,
@@ -2738,11 +2738,11 @@ function CEPGP_keyExists(t, key)
 end
 
 function CEPGP_addCharacterLink(main, alt)
-	if not CEPGP.Alt.Links then
-		CEPGP.Alt.Links = {};
+	if not CEPGP_Lore.Alt.Links then
+		CEPGP_Lore.Alt.Links = {};
 	end
 	
-	for m, t in pairs(CEPGP.Alt.Links) do
+	for m, t in pairs(CEPGP_Lore.Alt.Links) do
 		for k, v in pairs(t) do
 			if string.lower(m) == string.lower(alt) then
 				CEPGP_print(alt .. " is already marked as a main character", true);
@@ -2757,35 +2757,35 @@ function CEPGP_addCharacterLink(main, alt)
 		end
 	end
 	
-	if not CEPGP.Alt.Links[main] then
-		CEPGP.Alt.Links[main] = {};
+	if not CEPGP_Lore.Alt.Links[main] then
+		CEPGP_Lore.Alt.Links[main] = {};
 	end
 	
-	CEPGP.Alt.Links[main][#CEPGP.Alt.Links[main]+1] = alt;
+	CEPGP_Lore.Alt.Links[main][#CEPGP_Lore.Alt.Links[main]+1] = alt;
 	
 	CEPGP_print(alt .. " is now an alt of " .. main);
 end
 
 function CEPGP_removeCharacterLink(main, alt)
-	if not CEPGP.Alt.Links then
-		CEPGP.Alt.Links = {};
+	if not CEPGP_Lore.Alt.Links then
+		CEPGP_Lore.Alt.Links = {};
 	end
 	
-	if not CEPGP.Alt.Links[main] then
+	if not CEPGP_Lore.Alt.Links[main] then
 		CEPGP_print(alt .. " is not an alt of " .. main, true);
-	elseif CEPGP.Alt.Links[main] and alt then
-		for k, v in ipairs(CEPGP.Alt.Links[main]) do
+	elseif CEPGP_Lore.Alt.Links[main] and alt then
+		for k, v in ipairs(CEPGP_Lore.Alt.Links[main]) do
 			if v == alt then
-				table.remove(CEPGP.Alt.Links[main], k);
+				table.remove(CEPGP_Lore.Alt.Links[main], k);
 				CEPGP_print(alt .. " is no longer linked to " .. main);
-				if #CEPGP.Alt.Links[main] == 0 then
-					CEPGP.Alt.Links[main] = nil;
+				if #CEPGP_Lore.Alt.Links[main] == 0 then
+					CEPGP_Lore.Alt.Links[main] = nil;
 				end
 				return;
 			end
 		end
-	elseif CEPGP.Alt.Links[main] then
-		CEPGP.Alt.Links[main] = nil;
+	elseif CEPGP_Lore.Alt.Links[main] then
+		CEPGP_Lore.Alt.Links[main] = nil;
 		CEPGP_print(main .. " and all linked alts have been released");
 		return;
 	else
@@ -2815,7 +2815,7 @@ function CEPGP_encodeClassString(class, str)
 end
 
 function CEPGP_getMain(name)
-	for mainName, v in pairs(CEPGP.Alt.Links) do
+	for mainName, v in pairs(CEPGP_Lore.Alt.Links) do
 		for index, altName in pairs(v) do
 			if name == altName then return mainName; end
 		end
@@ -2823,10 +2823,10 @@ function CEPGP_getMain(name)
 end
 
 --[[function CEPGP_syncAltStandings(main)
-	if not main or not CEPGP.Alt.Links[main] then return; end
+	if not main or not CEPGP_Lore.Alt.Links[main] then return; end
 	if not CEPGP_Info.Guild.Roster[main] then return; end
 	local mainIndex;
-	for k, alt in pairs(CEPGP.Alt.Links[main]) do
+	for k, alt in pairs(CEPGP_Lore.Alt.Links[main]) do
 		if CEPGP_Info.Guild.Roster[alt] then
 			mainIndex = CEPGP_getIndex(main, CEPGP_Info.Guild.Roster[main] or nil);
 			
@@ -2838,11 +2838,11 @@ end
 			local index = CEPGP_getIndex(alt);
 			local mEP,mGP = CEPGP_getEPGP(main, CEPGP_getIndex(main));	-- Standings of main
 			local EP,GP = CEPGP_getEPGP(alt, index);	-- Standings of alt
-			if CEPGP.Alt.SyncEP and CEPGP.Alt.SyncGP then
+			if CEPGP_Lore.Alt.SyncEP and CEPGP_Lore.Alt.SyncGP then
 				GuildRosterSetOfficerNote(index, mEP .. "," .. mGP);
-			elseif CEPGP.Alt.SyncEP then
+			elseif CEPGP_Lore.Alt.SyncEP then
 				GuildRosterSetOfficerNote(index, mEP .. "," .. GP);
-			elseif CEPGP.Alt.SyncGP then
+			elseif CEPGP_Lore.Alt.SyncGP then
 				GuildRosterSetOfficerNote(index, EP .. "," .. mGP);
 			end
 		end
@@ -2862,11 +2862,11 @@ function CEPGP_syncToMain(alt, index, main)
 	local altEP, altGP = CEPGP_getEPGP(alt, index);
 	local mainEP, mainGP = CEPGP_getEPGP(main, mainIndex);
 	
-	if CEPGP.Alt.SyncEP and CEPGP.Alt.SyncGP then
+	if CEPGP_Lore.Alt.SyncEP and CEPGP_Lore.Alt.SyncGP then
 		GuildRosterSetOfficerNote(mainIndex, altEP .. "," .. altGP);
-	elseif CEPGP.Alt.SyncEP then
+	elseif CEPGP_Lore.Alt.SyncEP then
 		GuildRosterSetOfficerNote(mainIndex, altEP .. "," .. mainGP);
-	elseif CEPGP.Alt.SyncGP then
+	elseif CEPGP_Lore.Alt.SyncGP then
 		GuildRosterSetOfficerNote(mainIndex, mainEP .. "," .. altGP);
 	end
 	
@@ -2877,22 +2877,22 @@ end
 
 function CEPGP_addAltEPGP(EP, GP, alt, main)
 	local success, failMsg = pcall(function()
-		if not main or CEPGP.Alt.BlockAwards then return; end
+		if not main or CEPGP_Lore.Alt.BlockAwards then return; end
 		local index = CEPGP_getIndex(alt);
 		local mainEP, mainGP = CEPGP_getEPGP(main, CEPGP_Info.Guild.Roster[main][1]);
 		local altEP, altGP = CEPGP_getEPGP(alt, index);
 		
 		mainEP = math.max(mainEP + EP, 0);
-		mainGP = math.max(mainGP + GP, CEPGP.GP.Min + math.max(GP, 0));
+		mainGP = math.max(mainGP + GP, CEPGP_Lore.GP.Min + math.max(GP, 0));
 		
 		altEP = math.max(altEP + EP, 0);
-		altGP = math.max(altGP + GP, CEPGP.GP.Min + math.max(GP, 0));
+		altGP = math.max(altGP + GP, CEPGP_Lore.GP.Min + math.max(GP, 0));
 		
-		if CEPGP.Alt.SyncEP and CEPGP.Alt.SyncGP then
+		if CEPGP_Lore.Alt.SyncEP and CEPGP_Lore.Alt.SyncGP then
 			GuildRosterSetOfficerNote(index, mainEP .. "," .. mainGP);	--	Both EPGP are being synced
-		elseif CEPGP.Alt.SyncEP then
+		elseif CEPGP_Lore.Alt.SyncEP then
 			GuildRosterSetOfficerNote(index, mainEP .. "," .. altGP);	--	Only EP is being synced
-		elseif CEPGP.Alt.SyncGP then
+		elseif CEPGP_Lore.Alt.SyncGP then
 			GuildRosterSetOfficerNote(index, altEP .. "," .. mainGP);	--	Only GP is being synced
 		else
 			GuildRosterSetOfficerNote(index, altEP .. "," .. altGP);	--	Alt standings are not synced with main

@@ -1,11 +1,11 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP");
+local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP_Lore");
 
 function CEPGP_ListButton_OnClick(obj, button)
 	if button == "LeftButton" then
 		if strfind(obj, "overrideButton") and strfind(obj, "Delete") then
 			
 			local name = _G[_G[obj]:GetParent():GetName() .. "item"]:GetText();
-			CEPGP.Overrides[name] = nil;
+			CEPGP_Lore.Overrides[name] = nil;
 			CEPGP_print(name .. " |c006969FFremoved from the GP override list");
 			CEPGP_UpdateOverrideScrollBar();
 			return;
@@ -13,7 +13,7 @@ function CEPGP_ListButton_OnClick(obj, button)
 		
 		if strfind(obj, "keywordButton") and strfind(obj, "Delete") then
 			local parent = _G[obj]:GetParent();
-			CEPGP.Loot.ExtraKeywords.Keywords[_G[parent:GetName() .. "Label"]:GetText()] = nil;
+			CEPGP_Lore.Loot.ExtraKeywords.Keywords[_G[parent:GetName() .. "Label"]:GetText()] = nil;
 			CEPGP_UpdateKeywordScrollBar();
 			return;
 		end
@@ -23,7 +23,7 @@ function CEPGP_ListButton_OnClick(obj, button)
 			local frame = _G["TrafficButton" .. id];
 			local entry = frame:GetAttribute("id");
 			if frame:GetAttribute("delete_confirm") == "true" then
-				table.remove(CEPGP.Traffic, tonumber(entry));
+				table.remove(CEPGP_Lore.Traffic, tonumber(entry));
 				CEPGP_print("Traffic entry " .. entry .. " purged.");
 				CEPGP_UpdateTrafficScrollBar();
 			else
@@ -33,12 +33,12 @@ function CEPGP_ListButton_OnClick(obj, button)
 					end
 					return true;
 				end
-				if verify(CEPGP.Traffic[entry]) then
+				if verify(CEPGP_Lore.Traffic[entry]) then
 					CEPGP_print("You are attempting to purge the following entry:");
-					if CEPGP.Traffic[entry][8] and string.find(CEPGP.Traffic[entry][8], "item:") then -- If an item is associated with the log
-						CEPGP_print("Issuer: " .. CEPGP.Traffic[entry][2] .. ", Action: " .. CEPGP.Traffic[entry][3] .. ", Item: " .. CEPGP.Traffic[entry][8] .. " |c006969FF, Recipient: " .. CEPGP.Traffic[entry][1] .. "|r");
+					if CEPGP_Lore.Traffic[entry][8] and string.find(CEPGP_Lore.Traffic[entry][8], "item:") then -- If an item is associated with the log
+						CEPGP_print("Issuer: " .. CEPGP_Lore.Traffic[entry][2] .. ", Action: " .. CEPGP_Lore.Traffic[entry][3] .. ", Item: " .. CEPGP_Lore.Traffic[entry][8] .. " |c006969FF, Recipient: " .. CEPGP_Lore.Traffic[entry][1] .. "|r");
 					else
-						CEPGP_print("Issuer: " .. CEPGP.Traffic[entry][2] .. ", Action: " .. CEPGP.Traffic[entry][3] .. ", Recipient: " .. CEPGP.Traffic[entry][1]);
+						CEPGP_print("Issuer: " .. CEPGP_Lore.Traffic[entry][2] .. ", Action: " .. CEPGP_Lore.Traffic[entry][3] .. ", Recipient: " .. CEPGP_Lore.Traffic[entry][1]);
 					end
 				else
 					CEPGP_print("You are attempting to purge a traffic entry.");
@@ -51,7 +51,7 @@ function CEPGP_ListButton_OnClick(obj, button)
 		
 		if strfind(obj, "TrafficButton") and strfind(obj, "Share") then
 			local entry = tonumber(string.sub(obj, 14, string.find(obj, "Share")-1));
-			local ID, GUID = CEPGP.Traffic[entry][10], CEPGP.Traffic[entry][11];
+			local ID, GUID = CEPGP_Lore.Traffic[entry][10], CEPGP_Lore.Traffic[entry][11];
 			if ID and GUID then
 				CEPGP_ShareTraffic(ID, GUID);
 			end
@@ -60,7 +60,7 @@ function CEPGP_ListButton_OnClick(obj, button)
 		
 		if obj == "CEPGP_filter_rank_confirm" then
 			for i = 1, 10 do
-				CEPGP.Guild.Filter[i] = _G["CEPGP_filter_rank_" .. i .. "_check"]:GetChecked();
+				CEPGP_Lore.Guild.Filter[i] = _G["CEPGP_filter_rank_" .. i .. "_check"]:GetChecked();
 			end
 			CEPGP_rosterUpdate("GUILD_ROSTER_UPDATE");
 			CEPGP_rank_filter:Hide();
@@ -117,11 +117,11 @@ function CEPGP_ListButton_OnClick(obj, button)
 		
 		elseif strfind(obj, "StandbyButton") then
 			local name = _G[_G[_G[obj]:GetName()]:GetParent():GetName() .. "Info"]:GetText();
-			for i = 1, CEPGP_ntgetn(CEPGP.Standby.Roster) do
-				if CEPGP.Standby.Roster[i][1] == name then
-					table.remove(CEPGP.Standby.Roster, i);
-					if CEPGP_isML() == 0 and CEPGP.Standby.Share then
-						CEPGP_addAddonMsg("StandbyListRemove;" .. CEPGP.Standby.Roster[i][1]);
+			for i = 1, CEPGP_ntgetn(CEPGP_Lore.Standby.Roster) do
+				if CEPGP_Lore.Standby.Roster[i][1] == name then
+					table.remove(CEPGP_Lore.Standby.Roster, i);
+					if CEPGP_isML() == 0 and CEPGP_Lore.Standby.Share then
+						CEPGP_addAddonMsg("StandbyListRemove;" .. CEPGP_Lore.Standby.Roster[i][1]);
 					end
 					break;
 				end
@@ -135,8 +135,8 @@ function CEPGP_ListButton_OnClick(obj, button)
 		if obj == "CEPGP_exclude_rank_confirm" then
 			local changes = false;
 			for i = 1, 10 do
-				if CEPGP.Guild.Exclusions[i] ~= _G["CEPGP_exclude_rank_" .. i .. "_check"]:GetChecked() then
-					CEPGP.Guild.Exclusions[i] = not CEPGP.Guild.Exclusions[i];
+				if CEPGP_Lore.Guild.Exclusions[i] ~= _G["CEPGP_exclude_rank_" .. i .. "_check"]:GetChecked() then
+					CEPGP_Lore.Guild.Exclusions[i] = not CEPGP_Lore.Guild.Exclusions[i];
 					changes = true;
 				end
 			end
@@ -203,7 +203,7 @@ function CEPGP_ListButton_OnClick(obj, button)
 				for i = 1, GetNumGuildMembers() do
 					local name, _, rIndex = GetGuildRosterInfo(i);
 					name = Ambiguate(name, "all");
-					if ranks[rIndex+1] and not CEPGP_tContains(CEPGP.Standby.Roster, name) and not CEPGP_tContains(group, name) and name ~= UnitName("player") then
+					if ranks[rIndex+1] and not CEPGP_tContains(CEPGP_Lore.Standby.Roster, name) and not CEPGP_tContains(group, name) and name ~= UnitName("player") then
 						local _, class, rank, _, oNote, _, classFile = CEPGP_getGuildInfo(name);
 						local EP,GP = CEPGP_getEPGP(name, i);
 						local entry = {
@@ -234,7 +234,7 @@ function CEPGP_ListButton_OnClick(obj, button)
 			return;
 		end
 		if obj == "CEPGP_standby_ep_list_purge" then
-			CEPGP.Standby.Roster = {};
+			CEPGP_Lore.Standby.Roster = {};
 			if CEPGP_standby_options:IsVisible() then
 				CEPGP_UpdateStandbyScrollBar();
 			end
@@ -248,8 +248,8 @@ function CEPGP_ListButton_OnClick(obj, button)
 				local attr = _G[obj]:GetAttribute("response");
 				response = _G[obj]:GetAttribute("responseName");
 				response = CEPGP_indexToLabel(response);
-				reason = CEPGP.Loot.GUI.Buttons[attr] and CEPGP.Loot.GUI.Buttons[attr][2] or response;
-				discount = (CEPGP.Loot.ExtraKeywords.Keywords[attr] and CEPGP_getDiscount(attr)) or (CEPGP.Loot.GUI.Buttons[attr] and CEPGP.Loot.GUI.Buttons[attr][3]) or CEPGP_getDiscount(CEPGP_indexToLabel(attr));
+				reason = CEPGP_Lore.Loot.GUI.Buttons[attr] and CEPGP_Lore.Loot.GUI.Buttons[attr][2] or response;
+				discount = (CEPGP_Lore.Loot.ExtraKeywords.Keywords[attr] and CEPGP_getDiscount(attr)) or (CEPGP_Lore.Loot.GUI.Buttons[attr] and CEPGP_Lore.Loot.GUI.Buttons[attr][3]) or CEPGP_getDiscount(CEPGP_indexToLabel(attr));
 				CEPGP_distribute_popup:SetAttribute("responseName", reason);
 				CEPGP_distribute_popup:SetAttribute("response", attr);
 			else
@@ -563,7 +563,7 @@ end
 		--[[ Restore DropDown ]]--
 
 function CEPGP_initRestoreDropdown(frame, level, menuList)
-	for k, _ in pairs(CEPGP.Backups) do
+	for k, _ in pairs(CEPGP_Lore.Backups) do
 		local info = {text = k, func = CEPGP_restoreDropdownOnClick};
 		local entry = UIDropDownMenu_AddButton(info);
 	end
@@ -580,8 +580,8 @@ end
 function CEPGP_attendanceDropdown(frame, level, menuList)
 	local info = {text = "Guild List", value = 0, func = CEPGP_attendanceChange};
 	local entry = UIDropDownMenu_AddButton(info);
-	for i = 1, CEPGP_ntgetn(CEPGP.Attendance) do
-		local info = {text = date("%d/%m/%Y %H:%M", CEPGP.Attendance[i][1]), value = i, func = CEPGP_attendanceChange};
+	for i = 1, CEPGP_ntgetn(CEPGP_Lore.Attendance) do
+		local info = {text = date("%d/%m/%Y %H:%M", CEPGP_Lore.Attendance[i][1]), value = i, func = CEPGP_attendanceChange};
 		local entry = UIDropDownMenu_AddButton(info);
 	end
 end
@@ -612,14 +612,14 @@ function CEPGP_minThresholdDropdown(frame, level, menuList)
 		};
 		local entry = UIDropDownMenu_AddButton(info);
 	end
-	UIDropDownMenu_SetSelectedName(CEPGP_min_threshold_dropdown, rarity[CEPGP.Loot.MinThreshold]);
-	--UIDropDownMenu_SetSelectedValue(CEPGP.Loot.MinThreshold_dropdown, CEPGP.Loot.MinThreshold);
+	UIDropDownMenu_SetSelectedName(CEPGP_min_threshold_dropdown, rarity[CEPGP_Lore.Loot.MinThreshold]);
+	--UIDropDownMenu_SetSelectedValue(CEPGP_Lore.Loot.MinThreshold_dropdown, CEPGP_Lore.Loot.MinThreshold);
 end
 
 function CEPGP_minThresholdChange(self, value)
 	UIDropDownMenu_SetSelectedName(CEPGP_min_threshold_dropdown, self:GetText());
-	--UIDropDownMenu_SetSelectedValue(CEPGP.Loot.MinThreshold_dropdown, self.value);
-	CEPGP.Loot.MinThreshold = self.value;
+	--UIDropDownMenu_SetSelectedValue(CEPGP_Lore.Loot.MinThreshold_dropdown, self.value);
+	CEPGP_Lore.Loot.MinThreshold = self.value;
 	CEPGP_print("Minimum auto show threshold is now set to " .. self:GetText());
 end
 
@@ -641,7 +641,7 @@ function CEPGP_defChannelDropdown(frame, level, menuList)
 		local entry = UIDropDownMenu_AddButton(info);
 	end
 	for i = 1, #channels do
-		if string.lower(CEPGP.Channel) == string.lower(channels[i]) then
+		if string.lower(CEPGP_Lore.Channel) == string.lower(channels[i]) then
 			UIDropDownMenu_SetSelectedName(CEPGP_interface_options_def_channel_dropdown, channels[i]);
 		end
 	end
@@ -650,8 +650,8 @@ end
 function CEPGP_defChannelChange(self, value)
 	UIDropDownMenu_SetSelectedName(CEPGP_interface_options_def_channel_dropdown, self:GetText());
 	--UIDropDownMenu_SetSelectedValue(CEPGP_interface_options_def_channel_dropdown, self.value);
-	CEPGP.Channel = self:GetText();
-	CEPGP_print("Reporting channel set to \"" .. CEPGP.Channel .. "\".");
+	CEPGP_Lore.Channel = self:GetText();
+	CEPGP_print("Reporting channel set to \"" .. CEPGP_Lore.Channel .. "\".");
 end
 
 		--[[ Loot Response Channel DropDown ]]--
@@ -672,7 +672,7 @@ function CEPGP_lootChannelDropdown(frame, level, menuList)
 		local entry = UIDropDownMenu_AddButton(info);
 	end
 	for i = 1, #channels do
-		if string.lower(CEPGP.LootChannel) == string.lower(channels[i]) then
+		if string.lower(CEPGP_Lore.LootChannel) == string.lower(channels[i]) then
 			UIDropDownMenu_SetSelectedName(CEPGP_loot_channel_dropdown, channels[i]);
 			--UIDropDownMenu_SetSelectedValue(CEPGP_loot_channel_dropdown, i);
 		end
@@ -682,6 +682,6 @@ end
 function CEPGP_lootChannelChange(self, value)
 	UIDropDownMenu_SetSelectedName(CEPGP_loot_channel_dropdown, self:GetText());
 	--UIDropDownMenu_SetSelectedValue(CEPGP_loot_channel_dropdown, self.value);
-	CEPGP.LootChannel = self:GetText();
-	CEPGP_print("Loot response channel set to \"" .. CEPGP.LootChannel .. "\".");
+	CEPGP_Lore.LootChannel = self:GetText();
+	CEPGP_print("Loot response channel set to \"" .. CEPGP_Lore.LootChannel .. "\".");
 end

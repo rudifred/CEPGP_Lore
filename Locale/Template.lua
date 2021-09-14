@@ -14,7 +14,7 @@
 		"ptBR": Portuguese (Brazil)
 --]]
 
-local L = CEPGP_Locale:NewLocale("CEPGP", YOUR LOCALE GOES HERE)
+local L = CEPGP_Locale:NewLocale("CEPGP_Lore", YOUR LOCALE GOES HERE)
 
 if not L then return end
 

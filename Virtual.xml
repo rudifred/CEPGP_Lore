@@ -541,10 +541,10 @@
 				if item then
 					if GetItemInfo(item) then
 						local link = CEPGP_getItemLink(GetItemInfoInstant(item));
-						if link and not CEPGP.Overrides[link] then
-							local gp = CEPGP.Overrides[item];
-							CEPGP.Overrides[item] = nil;
-							CEPGP.Overrides[link] = gp;
+						if link and not CEPGP_Lore.Overrides[link] then
+							local gp = CEPGP_Lore.Overrides[item];
+							CEPGP_Lore.Overrides[item] = nil;
+							CEPGP_Lore.Overrides[link] = gp;
 						end
 					end
 				end
@@ -1022,28 +1022,28 @@
 				self:ClearFocus();
 			</OnEnterPressed>
 			<OnEditFocusLost>
-				local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP");
+				local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP_Lore");
 				self:HighlightText(0,0);
 				local name = strsub(self:GetName(), 15, strfind(self:GetName(), "_EP")-1);
 				local value = self:GetText();
 				if value == "" or not CEPGP_isNumber(value) then
-					self:SetText(tostring(CEPGP.EP.BossEP[name]));
-				elseif value == CEPGP.EP.BossEP[name] then
+					self:SetText(tostring(CEPGP_Lore.EP.BossEP[name]));
+				elseif value == CEPGP_Lore.EP.BossEP[name] then
 					return;
-				elseif CEPGP.EP.BossEP[name] ~= tonumber(value) then
+				elseif CEPGP_Lore.EP.BossEP[name] ~= tonumber(value) then
 					value = tonumber(value);
-					CEPGP.EP.BossEP[name] = value;
+					CEPGP_Lore.EP.BossEP[name] = value;
 					
 					local tName = _G["CEPGP_options_" .. name .. "_val"]:GetText();
 					CEPGP_print(L["Updated EP award for "] .. L[tName]);
 				end
 			</OnEditFocusLost>
 			<OnShow>
-				local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP");
+				local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP_Lore");
 
 				local name = strsub(self:GetName(), 15, strfind(self:GetName(), "_EP")-1);
 				local target = _G["CEPGP_options_" .. name .. "_val"];		
-				self:SetText(tostring(CEPGP.EP.BossEP[name]));
+				self:SetText(tostring(CEPGP_Lore.EP.BossEP[name]));
 				--self:SetPoint('LEFT', target, 'LEFT', 420, 0); --FontStrings justify to the left, so for the sake of structuring, it's better to set the relative anchor to left
 			</OnShow>
 		</Scripts>
@@ -1113,7 +1113,7 @@
 			</OnLoad>
 			<OnShow>
 				local slot = strsub(self:GetName(), 15, strfind(self:GetName(), "_weight")-1);
-				local value = CEPGP.GP.SlotWeights[slot];
+				local value = CEPGP_Lore.GP.SlotWeights[slot];
 				self:SetText(value);
 			</OnShow>
 			<OnEnterPressed>
@@ -1123,10 +1123,10 @@
 				self:HighlightText(0,0);
 				local slot = string.sub(self:GetName(), 15, string.find(self:GetName(), "_weight")-1);
 				local value = self:GetText();
-				if CEPGP_isNumber(self:GetText()) and CEPGP.GP.SlotWeights[slot] ~= tonumber(value) then
-					CEPGP.GP.SlotWeights[slot] = tonumber(value);
+				if CEPGP_isNumber(self:GetText()) and CEPGP_Lore.GP.SlotWeights[slot] ~= tonumber(value) then
+					CEPGP_Lore.GP.SlotWeights[slot] = tonumber(value);
 				else
-					self:SetText(CEPGP.GP.SlotWeights[slot]);
+					self:SetText(CEPGP_Lore.GP.SlotWeights[slot]);
 				end
 			</OnEditFocusLost>
 		</Scripts>
@@ -1141,13 +1141,13 @@
 				self:RegisterForClicks('LeftButtonDown');
 			</OnLoad>
 			<OnClick>
-				local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP");
+				local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP_Lore");
 				
 				local name = strsub(self:GetName(), 15, strfind(self:GetName(), "_auto_check")-1);
 				if self:GetChecked() then
-					CEPGP.EP.AutoAward[name] = true;
+					CEPGP_Lore.EP.AutoAward[name] = true;
 				else
-					CEPGP.EP.AutoAward[name] = false;
+					CEPGP_Lore.EP.AutoAward[name] = false;
 				end
 				local tName = _G["CEPGP_options_" .. name .. "_val"]:GetText();
 				CEPGP_print(L["Updated auto award for "] .. L[tName]);
@@ -1155,7 +1155,7 @@
 			<OnShow>
 				local name = strsub(self:GetName(), 15, strfind(self:GetName(), "_auto_check")-1);
 				local target = _G["CEPGP_options_" .. name .. "_EP_value"];		
-				self:SetChecked(CEPGP.EP.AutoAward[name]);
+				self:SetChecked(CEPGP_Lore.EP.AutoAward[name]);
 				--self:SetPoint('LEFT', target, 'RIGHT', 15, 0);
 			</OnShow>
 		</Scripts>
@@ -1176,11 +1176,11 @@
 			</OnLoad>
 			<OnClick>
 				local id = self:GetID();
-				CEPGP.Standby.Ranks[id] = self:GetChecked();
+				CEPGP_Lore.Standby.Ranks[id] = self:GetChecked();
 			</OnClick>
 			<OnShow>
 				local id = self:GetID();
-				self:SetChecked(CEPGP.Standby.Ranks[id]);
+				self:SetChecked(CEPGP_Lore.Standby.Ranks[id]);
 			</OnShow>
 		</Scripts>
 	</CheckButton>
@@ -1202,7 +1202,7 @@
 		<Scripts>
 			<OnClick>
 				local id = self:GetID();
-				CEPGP.Loot.RaidVisibility[3][id] = self:GetChecked();
+				CEPGP_Lore.Loot.RaidVisibility[3][id] = self:GetChecked();
 			</OnClick>
 			<OnShow>
 				local id = self:GetID();
@@ -1211,9 +1211,9 @@
 				
 				if rankName ~= "" then
 					str:SetText(rankName);
-					if CEPGP.Loot.RaidVisibility[3][id] or CEPGP.Loot.RaidVisibility[2] then
+					if CEPGP_Lore.Loot.RaidVisibility[3][id] or CEPGP_Lore.Loot.RaidVisibility[2] then
 						self:SetChecked(true);
-						if CEPGP.Loot.RaidVisibility[2] then
+						if CEPGP_Lore.Loot.RaidVisibility[2] then
 							self:Disable();
 							_G[self:GetName() .. "_label"]:SetTextColor(0.5, 0.5, 0.5);
 						else
@@ -1244,8 +1244,8 @@
 		<Scripts>
 			<OnClick>
 				local id = self:GetID();
-				CEPGP.Sync[2][id] = self:GetChecked();
-				--CEPGP.Loot.RaidVisibility[3][id] = self:GetChecked();
+				CEPGP_Lore.Sync[2][id] = self:GetChecked();
+				--CEPGP_Lore.Loot.RaidVisibility[3][id] = self:GetChecked();
 			</OnClick>
 			<OnShow>
 				local id = self:GetID();
@@ -1254,8 +1254,8 @@
 				
 				if rankName ~= "" then
 					str:SetText(rankName);
-					self:SetChecked(CEPGP.Sync[2][id]);
-					--self:SetChecked(CEPGP.Loot.RaidVisibility[3][id]);
+					self:SetChecked(CEPGP_Lore.Sync[2][id]);
+					--self:SetChecked(CEPGP_Lore.Loot.RaidVisibility[3][id]);
 				else
 					self:Hide();
 				end

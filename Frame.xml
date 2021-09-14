@@ -416,7 +416,7 @@
 								GameTooltip:Hide();
 							</OnLeave>
 							<OnShow>
-								if CEPGP.Decay.Separate or not CanEditOfficerNote() then
+								if CEPGP_Lore.Decay.Separate or not CanEditOfficerNote() then
 									self:Hide();
 								end
 							</OnShow>
@@ -446,9 +446,9 @@
 								GameTooltip:Hide();
 							</OnLeave>
 							<OnShow>
-								if CanEditOfficerNote() and CEPGP.Decay.Separate then
+								if CanEditOfficerNote() and CEPGP_Lore.Decay.Separate then
 									self:Show();
-								elseif not CanEditOfficerNote() or not CEPGP.Decay.Separate then
+								elseif not CanEditOfficerNote() or not CEPGP_Lore.Decay.Separate then
 									self:Hide();
 								end
 							</OnShow>
@@ -467,9 +467,9 @@
 						</Anchors>
 						<Scripts>
 							<OnShow>
-								if CanEditOfficerNote() and CEPGP.Decay.Separate then
+								if CanEditOfficerNote() and CEPGP_Lore.Decay.Separate then
 									self:Show();
-								elseif not CanEditOfficerNote() or not CEPGP.Decay.Separate then
+								elseif not CanEditOfficerNote() or not CEPGP_Lore.Decay.Separate then
 									self:Hide();
 								end
 							</OnShow>
@@ -1044,7 +1044,7 @@
 								
 								for name, v in pairs(CEPGP_Info.Loot.ItemsTable) do
 									if v[4] then
-										if v[4] > highestRoll and ((CEPGP.Loot.HighestRollIncludesPass and v[3] == 6) or v[3] ~= 6) then
+										if v[4] > highestRoll and ((CEPGP_Lore.Loot.HighestRollIncludesPass and v[3] == 6) or v[3] ~= 6) then
 											player = name;
 											highestRoll = v[4];
 										end
@@ -2461,7 +2461,7 @@
 				<Scripts>
 					<OnClick>
 						local record = UIDropDownMenu_GetSelectedName(CEPGP_restoreDropdown);
-						CEPGP.Backups[record] = nil;
+						CEPGP_Lore.Backups[record] = nil;
 						CEPGP_print("Deleted log: " .. record);
 						CEPGP_initDropdown(self, CEPGP_initRestoreDropdown);
 					</OnClick>
@@ -2498,14 +2498,14 @@
 						--CEPGP_Info.IgnoreUpdates = true;
 						
 						C_Timer.After(0.1, function()
-							if CEPGP.Backups[name] ~= nil and CEPGP_Info.Backups.ConfirmRestore then
+							if CEPGP_Lore.Backups[name] ~= nil and CEPGP_Info.Backups.ConfirmRestore then
 								local i = 0;
 								C_Timer.NewTicker(0.0001, function()
 									i = i + 1;
 									local fullName = GetGuildRosterInfo(i);
 									local player = Ambiguate(fullName, "all");
-									if CEPGP.Backups[name][fullName] and not CEPGP_Info.Guild.Roster[player][9] then
-										GuildRosterSetOfficerNote(i, CEPGP.Backups[name][fullName]);
+									if CEPGP_Lore.Backups[name][fullName] and not CEPGP_Info.Guild.Roster[player][9] then
+										GuildRosterSetOfficerNote(i, CEPGP_Lore.Backups[name][fullName]);
 									end
 									if i == GetNumGuildMembers() then
 										update();
@@ -2513,7 +2513,7 @@
 								end, GetNumGuildMembers());
 								CEPGP_Info.Backups.ConfirmRestore = false;
 								HideUIPanel(CEPGP_restore_guild_logs);
-							elseif CEPGP.Backups[name] ~= nil then
+							elseif CEPGP_Lore.Backups[name] ~= nil then
 								CEPGP_print("Are you sure you would like to restore guild EPGP standings from record [" .. name .. "]?");
 								CEPGP_print("This action CANNOT be undone. Press confirm again to restore.");
 								CEPGP_Info.Backups.ConfirmRestore = true;
@@ -2757,7 +2757,7 @@
 						vInfo = CEPGP_split(CEPGP_Info.Version.List[name][1], ".");
 						
 						if vInfo[3] and (vInfo[2] == "12" and "23" > vInfo[3]) then
-							CEPGP_print(name .. " is running an incompatible version of CEPGP. They need to update before you can import settings from them.", true);
+							CEPGP_print(name .. " is running an incompatible version of CEPGP_Lore. They need to update before you can import settings from them.", true);
 							return;
 						end
 						
@@ -2778,15 +2778,15 @@
 							if frame:GetChecked() then
 								attr = frame:GetAttribute("varName");
 								if attr == "Alt" then
-									CEPGP.Alt.Links = {};
+									CEPGP_Lore.Alt.Links = {};
 									CEPGP_UpdateAltScrollBar();
 								end
 								if attr == "Overrides" then
-									CEPGP.Overrides = {};
+									CEPGP_Lore.Overrides = {};
 									CEPGP_UpdateOverrideScrollBar();
 								end
 								if attr == "Standby" then
-									CEPGP.Standby.Roster = {};
+									CEPGP_Lore.Standby.Roster = {};
 									if CEPGP_standby_options:IsVisible() then
 										CEPGP_UpdateStandbyScrollBar();
 									end
@@ -3054,8 +3054,8 @@
 						end
 						if CEPGP_override_item_name:GetText() ~= "" then
 							local item = CEPGP_standardiseString(CEPGP_override_item_name:GetText());
-							if (CEPGP.Overrides[item] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP.Overrides[item] then
-								CEPGP.Overrides[item] = gp;
+							if (CEPGP_Lore.Overrides[item] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP_Lore.Overrides[item] then
+								CEPGP_Lore.Overrides[item] = gp;
 								CEPGP_print("GP value for " .. item .. " has been overriden to " .. gp);
 								CEPGP_UpdateOverrideScrollBar();
 								CEPGP_Info.Override.ConfirmOverwrite = false;
@@ -3065,7 +3065,7 @@
 								CEPGP_override_item_gp:ClearFocus();
 								return;
 							else
-								CEPGP_print(item .. " has already been overridden to " .. CEPGP.Overrides[item] .. ". Click add again to change self to " .. gp);
+								CEPGP_print(item .. " has already been overridden to " .. CEPGP_Lore.Overrides[item] .. ". Click add again to change self to " .. gp);
 								CEPGP_Info.Override.ConfirmOverwrite = true;
 							end
 						elseif CEPGP_override_item_id:GetText() ~= "" then
@@ -3075,8 +3075,8 @@
 								local item = Item:CreateFromItemID(id);
 								item:ContinueOnItemLoad(function()
 									link = CEPGP_getItemLink(id);
-									if (CEPGP.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP.Overrides[link] then
-										CEPGP.Overrides[link] = gp;
+									if (CEPGP_Lore.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP_Lore.Overrides[link] then
+										CEPGP_Lore.Overrides[link] = gp;
 										CEPGP_print("GP value for " .. link .. " |c006969FFhas been overriden to " .. gp);
 										CEPGP_UpdateOverrideScrollBar();
 										CEPGP_Info.Override.ConfirmOverwrite = false;
@@ -3088,13 +3088,13 @@
 										CEPGP_override_item_gp:ClearFocus();
 										return;
 									else
-										CEPGP_print(link .. " has already been overridden to " .. CEPGP.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
+										CEPGP_print(link .. " has already been overridden to " .. CEPGP_Lore.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
 										CEPGP_Info.Override.ConfirmOverwrite = true;
 									end
 								end);
 							elseif CEPGP_itemExists(id) then
-								if (CEPGP.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP.Overrides[link] then
-									CEPGP.Overrides[link] = gp;
+								if (CEPGP_Lore.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP_Lore.Overrides[link] then
+									CEPGP_Lore.Overrides[link] = gp;
 									CEPGP_print("GP value for " .. link .. " |c006969FFhas been overriden to " .. gp);
 									CEPGP_UpdateOverrideScrollBar();
 									CEPGP_Info.Override.ConfirmOverwrite = false;
@@ -3106,7 +3106,7 @@
 									CEPGP_override_item_gp:ClearFocus();
 									return;
 								else
-									CEPGP_print(link .. " has already been overridden to " .. CEPGP.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
+									CEPGP_print(link .. " has already been overridden to " .. CEPGP_Lore.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
 									CEPGP_Info.Override.ConfirmOverwrite = true;
 								end
 							else
@@ -3165,8 +3165,8 @@
 							local item = CEPGP_standardiseString(CEPGP_override_item_name:GetText());
 							local _, iString = GetItemInfo(item);
 							if iString then item = iString; end
-							if (CEPGP.Overrides[item] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP.Overrides[item] then
-								CEPGP.Overrides[item] = gp;
+							if (CEPGP_Lore.Overrides[item] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP_Lore.Overrides[item] then
+								CEPGP_Lore.Overrides[item] = gp;
 								CEPGP_print("GP value for " .. item .. " has been overriden to " .. gp);
 								CEPGP_UpdateOverrideScrollBar();
 								CEPGP_Info.Override.ConfirmOverwrite = false;
@@ -3176,7 +3176,7 @@
 								CEPGP_override_item_gp:ClearFocus();
 								return;
 							else
-								CEPGP_print(item .. " has already been overridden to " .. CEPGP.Overrides[item] .. ". Click add again to change self to " .. gp);
+								CEPGP_print(item .. " has already been overridden to " .. CEPGP_Lore.Overrides[item] .. ". Click add again to change self to " .. gp);
 								CEPGP_Info.Override.ConfirmOverwrite = true;
 							end
 						elseif CEPGP_override_item_id:GetText() ~= "" then
@@ -3188,8 +3188,8 @@
 								item:ContinueOnItemLoad(function()
 									--_, link = GetItemInfo(id);
 									link = CEPGP_getItemLink(id);
-									if (CEPGP.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP.Overrides[link] then
-										CEPGP.Overrides[link] = gp;
+									if (CEPGP_Lore.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP_Lore.Overrides[link] then
+										CEPGP_Lore.Overrides[link] = gp;
 										CEPGP_print("GP value for " .. link .. " |c006969FFhas been overriden to " .. gp);
 										CEPGP_UpdateOverrideScrollBar();
 										CEPGP_Info.Override.ConfirmOverwrite = false;
@@ -3201,13 +3201,13 @@
 										CEPGP_override_item_gp:ClearFocus();
 										return;
 									else
-										CEPGP_print(link .. " has already been overridden to " .. CEPGP.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
+										CEPGP_print(link .. " has already been overridden to " .. CEPGP_Lore.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
 										CEPGP_Info.Override.ConfirmOverwrite = true;
 									end
 								end);
 							elseif CEPGP_itemExists(id) then
-								if (CEPGP.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP.Overrides[link] then
-									CEPGP.Overrides[link] = gp;
+								if (CEPGP_Lore.Overrides[link] and CEPGP_Info.Override.ConfirmOverwrite) or not CEPGP_Lore.Overrides[link] then
+									CEPGP_Lore.Overrides[link] = gp;
 									CEPGP_print("GP value for " .. link .. " |c006969FFhas been overriden to " .. gp);
 									CEPGP_UpdateOverrideScrollBar();
 									CEPGP_Info.Override.ConfirmOverwrite = false;
@@ -3219,7 +3219,7 @@
 									CEPGP_override_item_gp:ClearFocus();
 									return;
 								else
-									CEPGP_print(link .. " has already been overridden to " .. CEPGP.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
+									CEPGP_print(link .. " has already been overridden to " .. CEPGP_Lore.Overrides[link] .. "|c006969FF. Click add again to change self to " .. gp);
 									CEPGP_Info.Override.ConfirmOverwrite = true;
 								end
 							else
@@ -3385,7 +3385,7 @@
 					<OnClick>
 						PlaySound(799);
 						if CEPGP_Info.Traffic.ConfirmClear then
-							CEPGP.Traffic = {};
+							CEPGP_Lore.Traffic = {};
 							CEPGP_UpdateTrafficScrollBar();
 							CEPGP_print("EPGP traffic wiped");
 							CEPGP_Info.Traffic.ConfirmClear = false;
@@ -3434,7 +3434,7 @@
 						<Scripts>
 							<OnEnter>
 								GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
-								GameTooltip:SetText("|c000077BEWhy can't I share some traffic entries?|r\nSome traffic entries cannot be shared because they are missing information which was added in version 1.12.10.\nIf a traffic entry was added before you (or your loot master) started using this version, it cannot be shared.\n\nAnother reason why you can't share a certain traffic entry is because the entry might contain malformed data.\nThe best way to avoid this is to ensure that you and your loot master are running the latest version of CEPGP.\n\n|c00FF0000Why is this taking so long?|r\nTo try to avoid disconnecting you, CEPGP transmits traffic entries at a rate of approximately one log per 0.1 seconds. You currently have " .. #CEPGP.Traffic .. " entries.");
+								GameTooltip:SetText("|c000077BEWhy can't I share some traffic entries?|r\nSome traffic entries cannot be shared because they are missing information which was added in version 1.12.10.\nIf a traffic entry was added before you (or your loot master) started using this version, it cannot be shared.\n\nAnother reason why you can't share a certain traffic entry is because the entry might contain malformed data.\nThe best way to avoid this is to ensure that you and your loot master are running the latest version of CEPGP_Lore.\n\n|c00FF0000Why is this taking so long?|r\nTo try to avoid disconnecting you, CEPGP transmits traffic entries at a rate of approximately one log per 0.1 seconds. You currently have " .. #CEPGP_Lore.Traffic .. " entries.");
 							</OnEnter>
 							<OnLeave>
 								GameTooltip:Hide();
@@ -3445,11 +3445,11 @@
 				<Scripts>
 					<OnClick>
 						PlaySound(799);
-						if #CEPGP.Traffic == 0 then return; end
+						if #CEPGP_Lore.Traffic == 0 then return; end
 						local success, failMsg = pcall(function()
 							self:Disable();
-							local i = #CEPGP.Traffic;
-							local limit = #CEPGP.Traffic;
+							local i = #CEPGP_Lore.Traffic;
+							local limit = #CEPGP_Lore.Traffic;
 							if CEPGP_Info.Traffic.Sharing then return; end
 							
 							CEPGP_Info.Traffic.Sharing = true;
@@ -3462,19 +3462,19 @@
 									local ID, GUID;
 									local player, issuer, action, EPB, EPA, GPB, GPA, itemID, tStamp;
 									
-									if CEPGP.Traffic[i][9] and CEPGP.Traffic[i][10] and CEPGP.Traffic[i][11] and tonumber(CEPGP.Traffic[i][9]) ~= tonumber(CEPGP.Traffic[i][10]) then
+									if CEPGP_Lore.Traffic[i][9] and CEPGP_Lore.Traffic[i][10] and CEPGP_Lore.Traffic[i][11] and tonumber(CEPGP_Lore.Traffic[i][9]) ~= tonumber(CEPGP_Lore.Traffic[i][10]) then
 										
-										player = CEPGP.Traffic[i][1];
-										issuer = CEPGP.Traffic[i][2];
-										action = CEPGP.Traffic[i][3];
-										EPB = CEPGP.Traffic[i][4] or "";
-										EPA = CEPGP.Traffic[i][5] or "";
-										GPB = CEPGP.Traffic[i][6] or "";
-										GPA = CEPGP.Traffic[i][7] or "";
-										itemID = CEPGP_getItemID(CEPGP_getItemString(CEPGP.Traffic[i][8])) or "";
-										tStamp = CEPGP.Traffic[i][9];
-										ID = CEPGP.Traffic[i][10];
-										GUID = CEPGP.Traffic[i][11];
+										player = CEPGP_Lore.Traffic[i][1];
+										issuer = CEPGP_Lore.Traffic[i][2];
+										action = CEPGP_Lore.Traffic[i][3];
+										EPB = CEPGP_Lore.Traffic[i][4] or "";
+										EPA = CEPGP_Lore.Traffic[i][5] or "";
+										GPB = CEPGP_Lore.Traffic[i][6] or "";
+										GPA = CEPGP_Lore.Traffic[i][7] or "";
+										itemID = CEPGP_getItemID(CEPGP_getItemString(CEPGP_Lore.Traffic[i][8])) or "";
+										tStamp = CEPGP_Lore.Traffic[i][9];
+										ID = CEPGP_Lore.Traffic[i][10];
+										GUID = CEPGP_Lore.Traffic[i][11];
 										
 										
 										local str = player .. ";" .. issuer .. ";" .. action .. ";" .. EPB .. ";" .. EPA .. ";" .. GPB .. ";" .. GPA .. ";" .. itemID .. ";" .. tStamp .. ";" .. ID .. ";" .. GUID;
@@ -3532,15 +3532,15 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CEPGP_Info.TrafficScope = math.min(CEPGP_Info.TrafficScope-500, #CEPGP.Traffic);
+						CEPGP_Info.TrafficScope = math.min(CEPGP_Info.TrafficScope-500, #CEPGP_Lore.Traffic);
 						CEPGP_UpdateTrafficScrollBar();
 						CEPGP_traffic_next:Enable();
 						
-						if 500 > #CEPGP.Traffic - CEPGP_Info.TrafficScope then
+						if 500 > #CEPGP_Lore.Traffic - CEPGP_Info.TrafficScope then
 							CEPGP_traffic_next:SetText("Next");
 							CEPGP_traffic_next:Disable();							
-						elseif 500 > #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500) then
-							CEPGP_traffic_next:SetText("Last " .. #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500));
+						elseif 500 > #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500) then
+							CEPGP_traffic_next:SetText("Last " .. #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500));
 						else
 							CEPGP_traffic_next:SetText("Next 500");
 						end
@@ -3555,11 +3555,11 @@
 						end
 					</OnClick>
 					<OnShow>
-						if 500 > #CEPGP.Traffic - CEPGP_Info.TrafficScope then
+						if 500 > #CEPGP_Lore.Traffic - CEPGP_Info.TrafficScope then
 							CEPGP_traffic_next:SetText("Next");
 							CEPGP_traffic_next:Disable();							
-						elseif 500 > #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500) then
-							CEPGP_traffic_next:SetText("Last " .. #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500));
+						elseif 500 > #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500) then
+							CEPGP_traffic_next:SetText("Last " .. #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500));
 						else
 							CEPGP_traffic_next:SetText("Next 500");
 						end
@@ -3588,18 +3588,18 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>
-						CEPGP_Info.TrafficScope = math.min(CEPGP_Info.TrafficScope+500, #CEPGP.Traffic);
+						CEPGP_Info.TrafficScope = math.min(CEPGP_Info.TrafficScope+500, #CEPGP_Lore.Traffic);
 						CEPGP_UpdateTrafficScrollBar();
 						CEPGP_traffic_previous:Enable();
 						
 						local page = CEPGP_traffic:GetAttribute("page");
 						CEPGP_traffic:SetAttribute("page", page+1);
 						
-						if 500 > #CEPGP.Traffic - CEPGP_Info.TrafficScope then
+						if 500 > #CEPGP_Lore.Traffic - CEPGP_Info.TrafficScope then
 							CEPGP_traffic_next:SetText("Next");
 							CEPGP_traffic_next:Disable();							
-						elseif 500 > #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500) then
-							CEPGP_traffic_next:SetText("Last " .. #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500));
+						elseif 500 > #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500) then
+							CEPGP_traffic_next:SetText("Last " .. #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500));
 						else
 							CEPGP_traffic_next:SetText("Next 500");
 						end
@@ -3614,11 +3614,11 @@
 						end
 					</OnClick>
 					<OnShow>
-						if 500 > #CEPGP.Traffic - CEPGP_Info.TrafficScope then
+						if 500 > #CEPGP_Lore.Traffic - CEPGP_Info.TrafficScope then
 							CEPGP_traffic_next:SetText("Next");
 							CEPGP_traffic_next:Disable();							
-						elseif 500 > #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500) then
-							CEPGP_traffic_next:SetText("Last " .. #CEPGP.Traffic - (CEPGP_Info.TrafficScope+500));
+						elseif 500 > #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500) then
+							CEPGP_traffic_next:SetText("Last " .. #CEPGP_Lore.Traffic - (CEPGP_Info.TrafficScope+500));
 						else
 							CEPGP_traffic_next:SetText("Next 500");
 						end
@@ -3760,7 +3760,7 @@
 				<Scripts>
 					<OnClick>
 						PlaySound(799);
-						CEPGP.Notice = true;
+						CEPGP_Lore.Notice = true;
 						ReloadUI();
 					</OnClick>
 				</Scripts>
@@ -3779,7 +3779,7 @@
 				<Scripts>
 					<OnClick>
 						PlaySound(799);
-						DisableAddOn("CEPGP");
+						DisableAddOn("CEPGP_Lore");
 						ReloadUI();
 					</OnClick>
 				</Scripts>
@@ -3938,7 +3938,7 @@
 							CEPGP_attendance_desc:SetText("Snapshot Summary");
 						else
 							CEPGP_Info.Attendance.SelectedSnapshot = UIDropDownMenu_GetSelectedValue(CEPGP_attendance_dropdown);
-							CEPGP_attendance_desc:SetText("Viewing Snapshot: " .. date("%A %d %B, %Y, %H:%M", CEPGP.Attendance[CEPGP_Info.Attendance.SelectedSnapshot][1]));
+							CEPGP_attendance_desc:SetText("Viewing Snapshot: " .. date("%A %d %B, %Y, %H:%M", CEPGP_Lore.Attendance[CEPGP_Info.Attendance.SelectedSnapshot][1]));
 						end
 						CEPGP_UpdateAttendanceScrollBar();
 					</OnClick>
@@ -4043,7 +4043,7 @@
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						local total = CEPGP_ntgetn(CEPGP.Attendance);
+						local total = CEPGP_ntgetn(CEPGP_Lore.Attendance);
 						self:SetText("Total Snapshots Recorded: " .. total);
 					</OnShow>
 				</Scripts>
@@ -5522,7 +5522,7 @@
 						_G["CEPGP_exclude_rank_"..i.."_check"]:SetChecked(false);
 					end
 					
-					_G["CEPGP_exclude_rank_"..i.."_check"]:SetChecked(CEPGP.Guild.Exclusions[i]);
+					_G["CEPGP_exclude_rank_"..i.."_check"]:SetChecked(CEPGP_Lore.Guild.Exclusions[i]);
 				end
 				CEPGP_localise(self);
 			</OnShow>
@@ -5876,7 +5876,7 @@
 						_G["CEPGP_filter_rank_"..i.."_check"]:SetChecked(false);
 					end
 					
-					_G["CEPGP_filter_rank_"..i.."_check"]:SetChecked(CEPGP.Guild.Filter[i]);
+					_G["CEPGP_filter_rank_"..i.."_check"]:SetChecked(CEPGP_Lore.Guild.Filter[i]);
 				end
 				CEPGP_localise(self);
 			</OnShow>
@@ -6363,9 +6363,9 @@
 					</OnLoad>
 					<OnShow>
 						local raid = self:GetAttribute("raid");
-						local amount = CEPGP.GP.RaidModifiers[raid];
+						local amount = CEPGP_Lore.GP.RaidModifiers[raid];
 						_G[self:GetName() .. "_string"]:SetText(raid);
-						self:SetText(CEPGP.GP.RaidModifiers[raid]);
+						self:SetText(CEPGP_Lore.GP.RaidModifiers[raid]);
 					</OnShow>
 					<OnEnterPressed>
 						self:ClearFocus();
@@ -6387,7 +6387,7 @@
 					<OnEditFocusLost>
 						local raid = self:GetAttribute("raid");
 						local value = self:GetText();
-						local default = CEPGP.GP.RaidModifiers[raid];
+						local default = CEPGP_Lore.GP.RaidModifiers[raid];
 						
 						if string.find(value, '[^-0-9.]') then
 							self:SetText(default);
@@ -6398,7 +6398,7 @@
 							return;
 						end
 						
-						CEPGP.GP.RaidModifiers[raid] = tonumber(value);
+						CEPGP_Lore.GP.RaidModifiers[raid] = tonumber(value);
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
@@ -6425,9 +6425,9 @@
 					</OnLoad>
 					<OnShow>
 						local raid = self:GetAttribute("raid");
-						local amount = CEPGP.GP.RaidModifiers[raid];
+						local amount = CEPGP_Lore.GP.RaidModifiers[raid];
 						_G[self:GetName() .. "_string"]:SetText(raid);
-						self:SetText(CEPGP.GP.RaidModifiers[raid]);
+						self:SetText(CEPGP_Lore.GP.RaidModifiers[raid]);
 					</OnShow>
 					<OnEnterPressed>
 						self:ClearFocus();
@@ -6450,7 +6450,7 @@
 					<OnEditFocusLost>
 						local raid = self:GetAttribute("raid");
 						local value = self:GetText();
-						local default = CEPGP.GP.RaidModifiers[raid];
+						local default = CEPGP_Lore.GP.RaidModifiers[raid];
 						
 						if string.find(value, '[^-0-9.]') then
 							self:SetText(default);
@@ -6461,7 +6461,7 @@
 							return;
 						end
 						
-						CEPGP.GP.RaidModifiers[raid] = tonumber(value);
+						CEPGP_Lore.GP.RaidModifiers[raid] = tonumber(value);
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
@@ -6488,9 +6488,9 @@
 					</OnLoad>
 					<OnShow>
 						local raid = self:GetAttribute("raid");
-						local amount = CEPGP.GP.RaidModifiers[raid];
+						local amount = CEPGP_Lore.GP.RaidModifiers[raid];
 						_G[self:GetName() .. "_string"]:SetText(raid);
-						self:SetText(CEPGP.GP.RaidModifiers[raid]);
+						self:SetText(CEPGP_Lore.GP.RaidModifiers[raid]);
 					</OnShow>
 					<OnEnterPressed>
 						self:ClearFocus();
@@ -6513,7 +6513,7 @@
 					<OnEditFocusLost>
 						local raid = self:GetAttribute("raid");
 						local value = self:GetText();
-						local default = CEPGP.GP.RaidModifiers[raid];
+						local default = CEPGP_Lore.GP.RaidModifiers[raid];
 						
 						if string.find(value, '[^-0-9.]') then
 							self:SetText(default);
@@ -6524,7 +6524,7 @@
 							return;
 						end
 						
-						CEPGP.GP.RaidModifiers[raid] = tonumber(value);
+						CEPGP_Lore.GP.RaidModifiers[raid] = tonumber(value);
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
@@ -6551,9 +6551,9 @@
 					</OnLoad>
 					<OnShow>
 						local raid = self:GetAttribute("raid");
-						local amount = CEPGP.GP.RaidModifiers[raid];
+						local amount = CEPGP_Lore.GP.RaidModifiers[raid];
 						_G[self:GetName() .. "_string"]:SetText(raid);
-						self:SetText(CEPGP.GP.RaidModifiers[raid]);
+						self:SetText(CEPGP_Lore.GP.RaidModifiers[raid]);
 					</OnShow>
 					<OnEnterPressed>
 						self:ClearFocus();
@@ -6576,7 +6576,7 @@
 					<OnEditFocusLost>
 						local raid = self:GetAttribute("raid");
 						local value = self:GetText();
-						local default = CEPGP.GP.RaidModifiers[raid];
+						local default = CEPGP_Lore.GP.RaidModifiers[raid];
 						
 						if string.find(value, '[^-0-9.]') then
 							self:SetText(default);
@@ -6587,7 +6587,7 @@
 							return;
 						end
 						
-						CEPGP.GP.RaidModifiers[raid] = tonumber(value);
+						CEPGP_Lore.GP.RaidModifiers[raid] = tonumber(value);
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
@@ -6614,9 +6614,9 @@
 					</OnLoad>
 					<OnShow>
 						local raid = self:GetAttribute("raid");
-						local amount = CEPGP.GP.RaidModifiers[raid];
+						local amount = CEPGP_Lore.GP.RaidModifiers[raid];
 						_G[self:GetName() .. "_string"]:SetText(raid);
-						self:SetText(CEPGP.GP.RaidModifiers[raid]);
+						self:SetText(CEPGP_Lore.GP.RaidModifiers[raid]);
 					</OnShow>
 					<OnEnterPressed>
 						self:ClearFocus();
@@ -6639,7 +6639,7 @@
 					<OnEditFocusLost>
 						local raid = self:GetAttribute("raid");
 						local value = self:GetText();
-						local default = CEPGP.GP.RaidModifiers[raid];
+						local default = CEPGP_Lore.GP.RaidModifiers[raid];
 						
 						if string.find(value, '[^-0-9.]') then
 							self:SetText(default);
@@ -6650,7 +6650,7 @@
 							return;
 						end
 						
-						CEPGP.GP.RaidModifiers[raid] = tonumber(value);
+						CEPGP_Lore.GP.RaidModifiers[raid] = tonumber(value);
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
@@ -6677,9 +6677,9 @@
 					</OnLoad>
 					<OnShow>
 						local raid = self:GetAttribute("raid");
-						local amount = CEPGP.GP.RaidModifiers[raid];
+						local amount = CEPGP_Lore.GP.RaidModifiers[raid];
 						_G[self:GetName() .. "_string"]:SetText(raid);
-						self:SetText(CEPGP.GP.RaidModifiers[raid]);
+						self:SetText(CEPGP_Lore.GP.RaidModifiers[raid]);
 					</OnShow>
 					<OnEnterPressed>
 						self:ClearFocus();
@@ -6702,7 +6702,7 @@
 					<OnEditFocusLost>
 						local raid = self:GetAttribute("raid");
 						local value = self:GetText();
-						local default = CEPGP.GP.RaidModifiers[raid];
+						local default = CEPGP_Lore.GP.RaidModifiers[raid];
 						
 						if string.find(value, '[^-0-9.]') then
 							self:SetText(default);
@@ -6713,7 +6713,7 @@
 							return;
 						end
 						
-						CEPGP.GP.RaidModifiers[raid] = tonumber(value);
+						CEPGP_Lore.GP.RaidModifiers[raid] = tonumber(value);
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
@@ -6740,9 +6740,9 @@
 					</OnLoad>
 					<OnShow>
 						local raid = self:GetAttribute("raid");
-						local amount = CEPGP.GP.RaidModifiers[raid];
+						local amount = CEPGP_Lore.GP.RaidModifiers[raid];
 						_G[self:GetName() .. "_string"]:SetText(raid);
-						self:SetText(CEPGP.GP.RaidModifiers[raid]);
+						self:SetText(CEPGP_Lore.GP.RaidModifiers[raid]);
 					</OnShow>
 					<OnEnterPressed>
 						self:ClearFocus();
@@ -6765,7 +6765,7 @@
 					<OnEditFocusLost>
 						local raid = self:GetAttribute("raid");
 						local value = self:GetText();
-						local default = CEPGP.GP.RaidModifiers[raid];
+						local default = CEPGP_Lore.GP.RaidModifiers[raid];
 						
 						if string.find(value, '[^-0-9.]') then
 							self:SetText(default);
@@ -6776,7 +6776,7 @@
 							return;
 						end
 						
-						CEPGP.GP.RaidModifiers[raid] = tonumber(value);
+						CEPGP_Lore.GP.RaidModifiers[raid] = tonumber(value);
 					</OnEditFocusLost>
 				</Scripts>
 			</EditBox>
@@ -7079,7 +7079,7 @@
 												else
 													toggle(false);
 												end
-												CEPGP.Sync[1] = self:GetChecked();
+												CEPGP_Lore.Sync[1] = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -7172,7 +7172,7 @@
 												CEPGP_toggleMinimapButton();
 											</OnClick>
 											<OnShow>
-												self:SetChecked(not CEPGP.Minimap.hide);
+												self:SetChecked(not CEPGP_Lore.Minimap.hide);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -7195,12 +7195,12 @@
 										<Scripts>
 											<OnClick>
 												if self:GetChecked() then
-													CEPGP.Decay.Separate = true;
+													CEPGP_Lore.Decay.Separate = true;
 													CEPGP_guild_decay_EP:Show();
 													CEPGP_guild_decay_GP:Show();
 													CEPGP_guild_decay:Hide();
 												else
-													CEPGP.Decay.Separate = false;
+													CEPGP_Lore.Decay.Separate = false;
 													CEPGP_guild_decay_EP:Hide();
 													CEPGP_guild_decay_GP:Hide();
 													CEPGP_guild_decay:Show();
@@ -7214,7 +7214,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Decay.Separate);
+												self:SetChecked(CEPGP_Lore.Decay.Separate);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -7273,18 +7273,18 @@
 												local value = self:GetText();
 												
 												if #value == 0 then
-													self:SetText(CEPGP.PollRate);
+													self:SetText(CEPGP_Lore.PollRate);
 													return;
 												end
 												
 												if string.find(value, '[^0-9.]') then
 													CEPGP_print("Enter a valid number", true);
-													self:SetText(CEPGP.PollRate);
+													self:SetText(CEPGP_Lore.PollRate);
 													return;
 												end
 												
 												if value == "." then
-													self:SetText(CEPGP.PollRate);
+													self:SetText(CEPGP_Lore.PollRate);
 													return;
 												end
 												
@@ -7292,11 +7292,11 @@
 												
 												if 0.0001 > tonumber(value) then
 													CEPGP_print("Specify a rate faster than " .. value, true);
-													self:SetText(CEPGP.PollRate);
+													self:SetText(CEPGP_Lore.PollRate);
 													return;
 												end
 												
-												CEPGP.PollRate = tonumber(value);
+												CEPGP_Lore.PollRate = tonumber(value);
 												CEPGP_Info.Guild.Polling = false;
 												CEPGP_rosterUpdate("GUILD_ROSTER_UPDATE");
 											</OnEditFocusLost>
@@ -7366,7 +7366,7 @@
 						CEPGP_sync_accepted_ranks:SetWidth(width-40);
 						
 						if IsInGuild() then
-							if CEPGP.Sync[1] then
+							if CEPGP_Lore.Sync[1] then
 								CEPGP_sync_accepted_ranks:SetAlpha(1);
 								CEPGP_sync_accepted_ranks:SetHeight(CEPGP_sync_rank_text:GetTop()-CEPGP_sync_accepted_rank_4_check:GetBottom());
 							else
@@ -7376,11 +7376,11 @@
 							CEPGP_sync_accepted_ranks:SetAlpha(0);
 						end
 						
-						_G[frame .. "_forced_sync_check"]:SetChecked(CEPGP.Sync[1]);
+						_G[frame .. "_forced_sync_check"]:SetChecked(CEPGP_Lore.Sync[1]);
 						_G[frame .. "_force_sync_button"]:SetWidth(_G[frame .. "_force_sync_button_text"]:GetStringWidth()+20);
 						_G[frame .. "_force_sync_button"]:SetHeight(_G[frame .. "_force_sync_button_text"]:GetStringHeight()+10);
 						
-						_G[frame .. "_poll_rate"]:SetText(CEPGP.PollRate);
+						_G[frame .. "_poll_rate"]:SetText(CEPGP_Lore.PollRate);
 					</OnShow>
 				</Scripts>
 			</Frame>
@@ -7551,10 +7551,10 @@
 								
 								if #main == 0 or #alt == 0 then return; end
 								
-								for k, v in pairs(CEPGP.Alt.Links) do
+								for k, v in pairs(CEPGP_Lore.Alt.Links) do
 									if string.lower(main) == string.lower(k) then
 										main = k;
-										for _, a in pairs(CEPGP.Alt.Links[main]) do
+										for _, a in pairs(CEPGP_Lore.Alt.Links[main]) do
 											if string.lower(alt) == string.lower(a) then
 												alt = a;
 											end
@@ -7596,7 +7596,7 @@
 								
 								if #main == 0 then return; end
 								
-								for k, v in pairs(CEPGP.Alt.Links) do
+								for k, v in pairs(CEPGP_Lore.Alt.Links) do
 									if string.lower(main) == string.lower(k) then
 										main = k;
 									end
@@ -7647,10 +7647,10 @@
 						<Scripts>
 							<OnClick>
 								if self:GetChecked() then
-									CEPGP.Alt.BlockAwards = true;
+									CEPGP_Lore.Alt.BlockAwards = true;
 									CEPGP_print("Alts can no longer directly earn EPGP");
 								else
-									CEPGP.Alt.BlockAwards = false;
+									CEPGP_Lore.Alt.BlockAwards = false;
 									CEPGP_print("Alts can now earn EPGP");
 								end
 							</OnClick>
@@ -7662,7 +7662,7 @@
 								GameTooltip:Hide();
 							</OnLeave>
 							<OnShow>
-								if CEPGP.Alt.BlockAwards then
+								if CEPGP_Lore.Alt.BlockAwards then
 									self:SetChecked(true);
 								else
 									self:SetChecked(false);
@@ -7684,10 +7684,10 @@
 						<Scripts>
 							<OnClick>
 								if self:GetChecked() then
-									CEPGP.Alt.SyncEP = true;
+									CEPGP_Lore.Alt.SyncEP = true;
 									CEPGP_print("Alt EP synchronisation enabled");
 								else
-									CEPGP.Alt.SyncEP = false;
+									CEPGP_Lore.Alt.SyncEP = false;
 									CEPGP_print("Alt EP synchronisation disabled");
 								end
 							</OnClick>
@@ -7699,7 +7699,7 @@
 								GameTooltip:Hide();
 							</OnLeave>
 							<OnShow>
-								if CEPGP.Alt.SyncEP then
+								if CEPGP_Lore.Alt.SyncEP then
 									self:SetChecked(true);
 								else
 									self:SetChecked(false);
@@ -7721,10 +7721,10 @@
 						<Scripts>
 							<OnClick>
 								if self:GetChecked() then
-									CEPGP.Alt.SyncGP = true;
+									CEPGP_Lore.Alt.SyncGP = true;
 									CEPGP_print("Alt GP synchronisation enabled");
 								else
-									CEPGP.Alt.SyncGP = false;
+									CEPGP_Lore.Alt.SyncGP = false;
 									CEPGP_print("Alt GP synchronisation disabled");
 								end
 							</OnClick>
@@ -7736,7 +7736,7 @@
 								GameTooltip:Hide();
 							</OnLeave>
 							<OnShow>
-								if CEPGP.Alt.SyncGP then
+								if CEPGP_Lore.Alt.SyncGP then
 									self:SetChecked(true);
 								else
 									self:SetChecked(false);
@@ -7823,9 +7823,9 @@
 				CEPGP_UpdateAltScrollBar();
 				CEPGP_options_alt_mangement_desc:SetText("Links alt with mains");
 				
-				_G[frame .. "_block_awarding"]:SetChecked(CEPGP.Alt.BlockAwards);
-				_G[frame .. "_sync_ep"]:SetChecked(CEPGP.Alt.SyncEP);
-				_G[frame .. "_sync_gp"]:SetChecked(CEPGP.Alt.SyncGP);
+				_G[frame .. "_block_awarding"]:SetChecked(CEPGP_Lore.Alt.BlockAwards);
+				_G[frame .. "_sync_ep"]:SetChecked(CEPGP_Lore.Alt.SyncEP);
+				_G[frame .. "_sync_gp"]:SetChecked(CEPGP_Lore.Alt.SyncGP);
 				CEPGP_localise(self);
 			</OnShow>
 		</Scripts>
@@ -9825,15 +9825,15 @@
 														local value = self:GetText();
 														if not CEPGP_isNumber(value) then
 															CEPGP_print("Base number must contain numbers only", true);
-															self:SetText(tostring(CEPGP.GP.Base));
+															self:SetText(tostring(CEPGP_Lore.GP.Base));
 														elseif value == "" then
 															CEPGP_print("Base number cannot be blank", true);
-															self:SetText(tostring(CEPGP.GP.Base));
+															self:SetText(tostring(CEPGP_Lore.GP.Base));
 														elseif tonumber(self:GetText()) == 0 then
 															CEPGP_print("Base number cannot be 0", true);
-															self:SetText(tostring(CEPGP.GP.Base));
-														elseif CEPGP.GP.Base ~= tonumber(value) then
-															CEPGP.GP.Base = tonumber(value);
+															self:SetText(tostring(CEPGP_Lore.GP.Base));
+														elseif CEPGP_Lore.GP.Base ~= tonumber(value) then
+															CEPGP_Lore.GP.Base = tonumber(value);
 														end
 													</OnEditFocusLost>
 												</Scripts>
@@ -9867,15 +9867,15 @@
 														local value = self:GetText();
 														if not CEPGP_isNumber(value) then
 															CEPGP_print("This field must contain numbers only", true);
-															self:SetText(tostring(CEPGP.GP.Multiplier));
+															self:SetText(tostring(CEPGP_Lore.GP.Multiplier));
 														elseif value == "" then
 															CEPGP_print("This field cannot be blank", true);
-															self:SetText(tostring(CEPGP.GP.Multiplier));
+															self:SetText(tostring(CEPGP_Lore.GP.Multiplier));
 														elseif tonumber(self:GetText()) == 0 then
 															CEPGP_print("This number cannot be 0", true);
-															self:SetText(tostring(CEPGP.GP.Multiplier));
-														elseif CEPGP.GP.Multiplier ~= tonumber(value) then
-															CEPGP.GP.Multiplier = tonumber(value);
+															self:SetText(tostring(CEPGP_Lore.GP.Multiplier));
+														elseif CEPGP_Lore.GP.Multiplier ~= tonumber(value) then
+															CEPGP_Lore.GP.Multiplier = tonumber(value);
 														end
 													</OnEditFocusLost>
 												</Scripts>
@@ -9899,15 +9899,15 @@
 														local value = self:GetText();
 														if not CEPGP_isNumber(value) then
 															CEPGP_print("Multiplier must contain numbers only", true);
-															self:SetText(tostring(CEPGP.GP.Mod));
+															self:SetText(tostring(CEPGP_Lore.GP.Mod));
 														elseif value == "" then
 															CEPGP_print("Multiplier cannot be blank", true);
-															self:SetText(tostring(CEPGP.GP.Mod));
+															self:SetText(tostring(CEPGP_Lore.GP.Mod));
 														elseif 0 >= tonumber(self:GetText()) then
 															CEPGP_print("Multiplier cannot be 0", true);
-															self:SetText(tostring(CEPGP.GP.Mod));
-														elseif CEPGP.GP.Mod ~= tonumber(value) then
-															CEPGP.GP.Mod = tonumber(value);
+															self:SetText(tostring(CEPGP_Lore.GP.Mod));
+														elseif CEPGP_Lore.GP.Mod ~= tonumber(value) then
+															CEPGP_Lore.GP.Mod = tonumber(value);
 														end
 													</OnEditFocusLost>
 												</Scripts>
@@ -10110,24 +10110,24 @@
 												local value = self:GetText();
 												if not CEPGP_isNumber(value) then
 													CEPGP_print("Base GP must contain numbers only", true);
-													self:SetText(tostring(CEPGP.GP.Min));
+													self:SetText(tostring(CEPGP_Lore.GP.Min));
 													return;
 												elseif value == "" then
 													CEPGP_print("Base GP cannot be blank", true);
-													self:SetText(tostring(CEPGP.GP.Min));
+													self:SetText(tostring(CEPGP_Lore.GP.Min));
 													return;
 												elseif tonumber(self:GetText()) == 0 then
 													CEPGP_print("Base GP cannot be 0", true);
-													self:SetText(tostring(CEPGP.GP.Min));
+													self:SetText(tostring(CEPGP_Lore.GP.Min));
 													return;
 												elseif 0 > tonumber(self:GetText()) then
 													CEPGP_print("Base GP must be a positive number", true);
-													self:SetText(tostring(CEPGP.GP.Min));
+													self:SetText(tostring(CEPGP_Lore.GP.Min));
 													return;
-												elseif CEPGP.GP.Min == tonumber(value) then
+												elseif CEPGP_Lore.GP.Min == tonumber(value) then
 													return;
 												end
-												CEPGP.GP.Min = tonumber(value);
+												CEPGP_Lore.GP.Min = tonumber(value);
 												CEPGP_print("Updated base GP");
 											</OnEditFocusLost>
 										</Scripts>
@@ -10146,7 +10146,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.GP.DecayFactor = self:GetChecked();
+												CEPGP_Lore.GP.DecayFactor = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -10171,7 +10171,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.GP.Tooltips = self:GetChecked();
+												CEPGP_Lore.GP.Tooltips = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -10181,7 +10181,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.GP.Tooltips);
+												self:SetChecked(CEPGP_Lore.GP.Tooltips);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -10230,12 +10230,12 @@
 		<Scripts>
 			<OnShow>
 				
-				CEPGP_options_coef_edit:SetText(CEPGP.GP.Base);
-				CEPGP_options_coef_2_edit:SetText(CEPGP.GP.Multiplier);
-				CEPGP_options_mod_edit:SetText(CEPGP.GP.Mod);
-				CEPGP_options_gp_initial:SetText(CEPGP.GP.Min);
-				CEPGP_options_gp_base_decay_check:SetChecked(CEPGP.GP.DecayFactor);
-				CEPGP_options_gp_tooltips_check:SetChecked(CEPGP.GP.Tooltips);
+				CEPGP_options_coef_edit:SetText(CEPGP_Lore.GP.Base);
+				CEPGP_options_coef_2_edit:SetText(CEPGP_Lore.GP.Multiplier);
+				CEPGP_options_mod_edit:SetText(CEPGP_Lore.GP.Mod);
+				CEPGP_options_gp_initial:SetText(CEPGP_Lore.GP.Min);
+				CEPGP_options_gp_base_decay_check:SetChecked(CEPGP_Lore.GP.DecayFactor);
+				CEPGP_options_gp_tooltips_check:SetChecked(CEPGP_Lore.GP.Tooltips);
 				
 				CEPGP_localise(self);
 			</OnShow>
@@ -10363,7 +10363,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[1][2];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[1][2];
 														if value == "" then
 															self:SetText(default);
 															CEPGP_print("Button text cannot be blank", true);
@@ -10376,7 +10376,7 @@
 															self:SetText(default);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[1][2] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[1][2] = value;
 														CEPGP_print("Updated loot GUI button 1 text.");
 														CEPGP_loot_options_preview_1:SetText(value);
 													</OnEditFocusLost>
@@ -10404,7 +10404,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = tonumber(self:GetText());
-														local default = CEPGP.Loot.GUI.Buttons[1][3];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[1][3];
 														if not value or value == default then
 															self:SetText(default);
 															return;
@@ -10414,7 +10414,7 @@
 															CEPGP_print("Discount cannot be more than 100%.", true);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[1][3] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[1][3] = value;
 														CEPGP_print("Updated GP discount for button 1.");
 													</OnEditFocusLost>
 												</Scripts>
@@ -10441,19 +10441,19 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[1][4];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[1][4];
 														
 														if string.lower(value) == string.lower(default) then return; end
 														
 														for i = 1, 4 do
-															if string.lower(value) == string.lower(CEPGP.Loot.GUI.Buttons[i][4]) then
+															if string.lower(value) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][4]) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
 																return;
 															end
 														end
 														
-														for k, _ in pairs(CEPGP.Loot.ExtraKeywords.Keywords) do
+														for k, _ in pairs(CEPGP_Lore.Loot.ExtraKeywords.Keywords) do
 															if string.lower(value) == string.lower(k) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
@@ -10473,7 +10473,7 @@
 															return;
 														end
 														
-														CEPGP.Loot.GUI.Buttons[1][4] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[1][4] = value;
 														CEPGP_print("Updated response 1 keyphrase.");
 														
 													</OnEditFocusLost>
@@ -10542,11 +10542,11 @@
 												<Scripts>
 													<OnClick>
 														if self:GetChecked() then
-															CEPGP.Loot.GUI.Buttons[2][1] = true;
+															CEPGP_Lore.Loot.GUI.Buttons[2][1] = true;
 															CEPGP_loot_options_preview_2:Show();
 															CEPGP_print("Loot GUI button 2 enabled.");
 														else
-															CEPGP.Loot.GUI.Buttons[2][1] = false;
+															CEPGP_Lore.Loot.GUI.Buttons[2][1] = false;
 															CEPGP_loot_options_preview_2:Hide();
 															CEPGP_print("Loot GUI button 2 disabled.");
 														end
@@ -10575,7 +10575,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[2][2];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[2][2];
 														if value == "" then
 															self:SetText(default);
 															CEPGP_print("Button text cannot be blank", true);
@@ -10588,7 +10588,7 @@
 															self:SetText(default);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[2][2] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[2][2] = value;
 														CEPGP_print("Updated loot GUI button 2 text.");
 														CEPGP_loot_options_preview_2:SetText(value);
 													</OnEditFocusLost>
@@ -10616,7 +10616,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = tonumber(self:GetText());
-														local default = CEPGP.Loot.GUI.Buttons[2][3];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[2][3];
 														if not value or value == default then
 															self:SetText(default);
 															return;
@@ -10626,7 +10626,7 @@
 															CEPGP_print("Discount cannot be more than 100%.", true);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[2][3] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[2][3] = value;
 														CEPGP_print("Updated GP discount for button 2.");
 													</OnEditFocusLost>
 												</Scripts>
@@ -10653,19 +10653,19 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[2][4];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[2][4];
 														
 														if string.lower(value) == string.lower(default) then return; end
 														
 														for i = 1, 4 do
-															if string.lower(value) == string.lower(CEPGP.Loot.GUI.Buttons[i][4]) then
+															if string.lower(value) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][4]) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
 																return;
 															end
 														end
 														
-														for k, _ in pairs(CEPGP.Loot.ExtraKeywords.Keywords) do
+														for k, _ in pairs(CEPGP_Lore.Loot.ExtraKeywords.Keywords) do
 															if string.lower(value) == string.lower(k) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
@@ -10685,7 +10685,7 @@
 															return;
 														end
 														
-														CEPGP.Loot.GUI.Buttons[2][4] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[2][4] = value;
 														CEPGP_print("Updated response 2 keyphrase.");
 														
 													</OnEditFocusLost>
@@ -10754,11 +10754,11 @@
 												<Scripts>
 													<OnClick>
 														if self:GetChecked() then
-															CEPGP.Loot.GUI.Buttons[3][1] = true;
+															CEPGP_Lore.Loot.GUI.Buttons[3][1] = true;
 															CEPGP_loot_options_preview_3:Show();
 															CEPGP_print("Loot GUI button 3 enabled.");
 														else
-															CEPGP.Loot.GUI.Buttons[3][1] = false;
+															CEPGP_Lore.Loot.GUI.Buttons[3][1] = false;
 															CEPGP_loot_options_preview_3:Hide();
 															CEPGP_print("Loot GUI button 3 disabled.");
 														end
@@ -10787,7 +10787,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[3][2];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[3][2];
 														if value == "" then
 															self:SetText(default);
 															CEPGP_print("Button text cannot be blank", true);
@@ -10800,7 +10800,7 @@
 															self:SetText(default);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[3][2] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[3][2] = value;
 														CEPGP_print("Updated loot GUI button 3 text.");
 														CEPGP_loot_options_preview_3:SetText(value);
 													</OnEditFocusLost>
@@ -10828,7 +10828,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = tonumber(self:GetText());
-														local default = CEPGP.Loot.GUI.Buttons[3][3];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[3][3];
 														if not value or value == default then
 															self:SetText(default);
 															return;
@@ -10838,11 +10838,11 @@
 															CEPGP_print("Discount cannot be more than 100%.", true);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[3][3] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[3][3] = value;
 														CEPGP_print("Updated GP discount for button 3.");
 													</OnEditFocusLost>
 													<OnShow>
-														self:SetText(tostring(CEPGP.Loot.GUI.Buttons[3][3]));
+														self:SetText(tostring(CEPGP_Lore.Loot.GUI.Buttons[3][3]));
 													</OnShow>
 												</Scripts>
 											</EditBox>
@@ -10868,19 +10868,19 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[3][4];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[3][4];
 														
 														if string.lower(value) == string.lower(default) then return; end
 														
 														for i = 1, 4 do
-															if string.lower(value) == string.lower(CEPGP.Loot.GUI.Buttons[i][4]) then
+															if string.lower(value) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][4]) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
 																return;
 															end
 														end
 														
-														for k, _ in pairs(CEPGP.Loot.ExtraKeywords.Keywords) do
+														for k, _ in pairs(CEPGP_Lore.Loot.ExtraKeywords.Keywords) do
 															if string.lower(value) == string.lower(k) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
@@ -10900,7 +10900,7 @@
 															return;
 														end
 														
-														CEPGP.Loot.GUI.Buttons[3][4] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[3][4] = value;
 														CEPGP_print("Updated response 3 keyphrase.");
 														
 													</OnEditFocusLost>
@@ -10969,11 +10969,11 @@
 												<Scripts>
 													<OnClick>
 														if self:GetChecked() then
-															CEPGP.Loot.GUI.Buttons[4][1] = true;
+															CEPGP_Lore.Loot.GUI.Buttons[4][1] = true;
 															CEPGP_loot_options_preview_4:Show();
 															CEPGP_print("Loot GUI button 4 enabled.");
 														else
-															CEPGP.Loot.GUI.Buttons[4][1] = false;
+															CEPGP_Lore.Loot.GUI.Buttons[4][1] = false;
 															CEPGP_loot_options_preview_4:Hide();
 															CEPGP_print("Loot GUI button 4 disabled.");
 														end
@@ -11002,7 +11002,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[4][2];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[4][2];
 														if value == "" then
 															self:SetText(default);
 															CEPGP_print("Button text cannot be blank", true);
@@ -11015,7 +11015,7 @@
 															self:SetText(default);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[4][2] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[4][2] = value;
 														CEPGP_print("Updated loot GUI button 4 text.");
 														CEPGP_loot_options_preview_4:SetText(value);
 													</OnEditFocusLost>
@@ -11043,7 +11043,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = tonumber(self:GetText());
-														local default = CEPGP.Loot.GUI.Buttons[4][3];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[4][3];
 														if not value or value == default then
 															self:SetText(default);
 															return;
@@ -11053,7 +11053,7 @@
 															CEPGP_print("Discount cannot be more than 100%.", true);
 															return;
 														end
-														CEPGP.Loot.GUI.Buttons[4][3] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[4][3] = value;
 														CEPGP_print("Updated GP discount for button 4.");
 													</OnEditFocusLost>
 												</Scripts>
@@ -11080,7 +11080,7 @@
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local value = self:GetText();
-														local default = CEPGP.Loot.GUI.Buttons[4][4];
+														local default = CEPGP_Lore.Loot.GUI.Buttons[4][4];
 														
 														if string.lower(value) == string.lower(default) then return; end
 														if string.find(value, ";") then
@@ -11090,14 +11090,14 @@
 														end
 														
 														for i = 1, 4 do
-															if string.lower(value) == string.lower(CEPGP.Loot.GUI.Buttons[i][4]) then
+															if string.lower(value) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][4]) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
 																return;
 															end
 														end
 														
-														for k, _ in pairs(CEPGP.Loot.ExtraKeywords.Keywords) do
+														for k, _ in pairs(CEPGP_Lore.Loot.ExtraKeywords.Keywords) do
 															if string.lower(value) == string.lower(k) then
 																CEPGP_print("Keyword '" .. value .. "' is already in use", true);
 																self:SetText(default);
@@ -11111,7 +11111,7 @@
 															return;
 														end
 														
-														CEPGP.Loot.GUI.Buttons[4][4] = value;
+														CEPGP_Lore.Loot.GUI.Buttons[4][4] = value;
 														CEPGP_print("Updated response 4 keyphrase.");
 														
 													</OnEditFocusLost>
@@ -11266,8 +11266,8 @@
 												
 												local parent = self:GetParent();
 												
-												CEPGP.Loot.ExtraKeywords.Enabled = not CEPGP.Loot.ExtraKeywords.Enabled;
-												if CEPGP.Loot.ExtraKeywords.Enabled then
+												CEPGP_Lore.Loot.ExtraKeywords.Enabled = not CEPGP_Lore.Loot.ExtraKeywords.Enabled;
+												if CEPGP_Lore.Loot.ExtraKeywords.Enabled then
 													toggle(true);
 													self:Disable();
 												else
@@ -11275,7 +11275,7 @@
 												end
 											</OnClick>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.ExtraKeywords.Enabled);
+												self:SetChecked(CEPGP_Lore.Loot.ExtraKeywords.Enabled);
 											</OnShow>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -11451,19 +11451,19 @@
 														
 														
 														for i = 1, 4 do
-															if string.lower(label) == string.lower(CEPGP.Loot.GUI.Buttons[i][2]) or
-																string.lower(label) == string.lower(CEPGP.Loot.GUI.Buttons[i][4])then
+															if string.lower(label) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][2]) or
+																string.lower(label) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][4])then
 																CEPGP_print("Label '" .. label .. "' is already in use", true);
 																return;
 															end
-															if string.lower(keyword) == string.lower(CEPGP.Loot.GUI.Buttons[i][2]) or
-																string.lower(keyword) == string.lower(CEPGP.Loot.GUI.Buttons[i][4])then
+															if string.lower(keyword) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][2]) or
+																string.lower(keyword) == string.lower(CEPGP_Lore.Loot.GUI.Buttons[i][4])then
 																CEPGP_print("Keyword '" .. keyword .. "' is already in use", true);
 																return;
 															end
 														end
 														
-														for k, v in pairs(CEPGP.Loot.ExtraKeywords.Keywords) do
+														for k, v in pairs(CEPGP_Lore.Loot.ExtraKeywords.Keywords) do
 															if k == label or isKey(v, label) then
 																CEPGP_print("Label '" .. label .. "' is already in use", true);
 																return;
@@ -11481,7 +11481,7 @@
 															CEPGP_print("Keywords must be at least 3 characters long", true);
 														end
 														
-														CEPGP.Loot.ExtraKeywords.Keywords[label] = {
+														CEPGP_Lore.Loot.ExtraKeywords.Keywords[label] = {
 															[keyword] = discount
 														};
 														CEPGP_UpdateKeywordScrollBar();
@@ -11624,17 +11624,17 @@
 											<OnEditFocusLost>
 												self:HighlightText(0,0);
 												local value = tonumber(self:GetText());
-												local default = CEPGP.Loot.GUI.Timer;
+												local default = CEPGP_Lore.Loot.GUI.Timer;
 												if not value or value == default then
-													self:SetText(tostring(CEPGP.Loot.GUI.Timer));
+													self:SetText(tostring(CEPGP_Lore.Loot.GUI.Timer));
 													return;
 												end
 												if tonumber(value) then
-													CEPGP.Loot.GUI.Timer = tonumber(value);
+													CEPGP_Lore.Loot.GUI.Timer = tonumber(value);
 												end
 											</OnEditFocusLost>
 											<OnShow>
-												self:SetText(tostring(CEPGP.Loot.GUI.Timer));
+												self:SetText(tostring(CEPGP_Lore.Loot.GUI.Timer));
 											</OnShow>
 											<OnLoad>
 												local point, ref, relPoint, x, y = self:GetPoint();
@@ -11671,14 +11671,14 @@
 											<OnEditFocusLost>
 												self:HighlightText(0,0);
 												local value = self:GetText();
-												local default = CEPGP.Loot.Announcement;
+												local default = CEPGP_Lore.Loot.Announcement;
 												if value == default then
 													return;
 												end
-												CEPGP.Loot.Announcement = value;
+												CEPGP_Lore.Loot.Announcement = value;
 											</OnEditFocusLost>
 											<OnShow>
-												self:SetText(CEPGP.Loot.Announcement);
+												self:SetText(CEPGP_Lore.Loot.Announcement);
 											</OnShow>
 											<OnLoad>
 												local point, ref, relPoint, x, y = self:GetPoint();
@@ -11704,9 +11704,9 @@
 										<Scripts>
 											<OnClick>
 												if self:GetChecked() then
-													CEPGP.Loot.RaidWarning = true;
+													CEPGP_Lore.Loot.RaidWarning = true;
 												else
-													CEPGP.Loot.RaidWarning = false;
+													CEPGP_Lore.Loot.RaidWarning = false;
 												end
 											</OnClick>
 											<OnEnter>
@@ -11717,7 +11717,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												if CEPGP.Loot.RaidWarning then
+												if CEPGP_Lore.Loot.RaidWarning then
 													self:SetChecked(true);
 												else
 													self:SetChecked(false);
@@ -11739,7 +11739,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.HideKeyphrases = self:GetChecked();
+												CEPGP_Lore.Loot.HideKeyphrases = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -11749,7 +11749,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.HideKeyphrases);
+												self:SetChecked(CEPGP_Lore.Loot.HideKeyphrases);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -11768,7 +11768,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.Resubmit = self:GetChecked();
+												CEPGP_Lore.Loot.Resubmit = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -11778,7 +11778,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												if CEPGP.Loot.Resubmit then
+												if CEPGP_Lore.Loot.Resubmit then
 													self:SetChecked(true);
 												else
 													self:SetChecked(false);
@@ -11800,7 +11800,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.SuppressResubmitResponses = self:GetChecked();
+												CEPGP_Lore.Loot.SuppressResubmitResponses = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -11810,7 +11810,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.SuppressResubmitResponses);
+												self:SetChecked(CEPGP_Lore.Loot.SuppressResubmitResponses);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -11828,13 +11828,13 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.SuppressResponses = self:GetChecked();
+												CEPGP_Lore.Loot.SuppressResponses = self:GetChecked();
 												CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(self:GetChecked());
 												if self:GetChecked() then
 													CEPGP_loot_options_suppress_change_of_mind_check:Disable();
 												else
 													CEPGP_loot_options_suppress_change_of_mind_check:Enable();
-													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP.Loot.SuppressResubmitResponses);
+													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP_Lore.Loot.SuppressResubmitResponses);
 												end
 											</OnClick>
 											<OnEnter>
@@ -11845,14 +11845,14 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												if CEPGP.Loot.SuppressResponses or CEPGP.Loot.DelayResponses then
+												if CEPGP_Lore.Loot.SuppressResponses or CEPGP_Lore.Loot.DelayResponses then
 													self:SetChecked(true);
 													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(true);
 													CEPGP_loot_options_suppress_change_of_mind_check:Disable();
 												else
 													self:SetChecked(false);
 													CEPGP_loot_options_suppress_change_of_mind_check:Enable();
-													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP.Loot.SuppressResubmitResponses);
+													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP_Lore.Loot.SuppressResubmitResponses);
 												end
 											</OnShow>
 										</Scripts>
@@ -11871,16 +11871,16 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.DelayResponses = self:GetChecked();
+												CEPGP_Lore.Loot.DelayResponses = self:GetChecked();
 												if self:GetChecked() then													
 													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(true);
 													CEPGP_loot_options_suppress_change_of_mind_check:Disable();
 													CEPGP_options_announcement_suppression_check:SetChecked(true);
 													CEPGP_options_announcement_suppression_check:Disable();
 												else
-													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP.Loot.SuppressResubmitResponses);
+													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP_Lore.Loot.SuppressResubmitResponses);
 													CEPGP_loot_options_suppress_change_of_mind_check:Enable();
-													CEPGP_options_announcement_suppression_check:SetChecked(CEPGP.Loot.SuppressResponsess);
+													CEPGP_options_announcement_suppression_check:SetChecked(CEPGP_Lore.Loot.SuppressResponsess);
 													CEPGP_options_announcement_suppression_check:Enable();
 												end
 											</OnClick>
@@ -11892,7 +11892,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.DelayResponses);
+												self:SetChecked(CEPGP_Lore.Loot.DelayResponses);
 												
 												if self:GetChecked() then
 													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(true);
@@ -11900,9 +11900,9 @@
 													CEPGP_options_announcement_suppression_check:SetChecked(true);
 													CEPGP_options_announcement_suppression_check:Disable();
 												else
-													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP.Loot.SuppressResubmitResponses);
+													CEPGP_loot_options_suppress_change_of_mind_check:SetChecked(CEPGP_Lore.Loot.SuppressResubmitResponses);
 													CEPGP_loot_options_suppress_change_of_mind_check:Enable();
-													CEPGP_options_announcement_suppression_check:SetChecked(CEPGP.Loot.SuppressResponsess);
+													CEPGP_options_announcement_suppression_check:SetChecked(CEPGP_Lore.Loot.SuppressResponsess);
 													CEPGP_options_announcement_suppression_check:Enable();
 												end
 											</OnShow>
@@ -11922,7 +11922,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.PRWithDelay = self:GetChecked();
+												CEPGP_Lore.Loot.PRWithDelay = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -11932,7 +11932,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.PRWithDelay);
+												self:SetChecked(CEPGP_Lore.Loot.PRWithDelay);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -11950,7 +11950,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.RollWithDelay = self:GetChecked();
+												CEPGP_Lore.Loot.RollWithDelay = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -11960,7 +11960,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.RollWithDelay);
+												self:SetChecked(CEPGP_Lore.Loot.RollWithDelay);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -11978,7 +11978,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.MinReq[1] = self:GetChecked();
+												CEPGP_Lore.Loot.MinReq[1] = self:GetChecked();
 												
 												if self:GetChecked() then
 													CEPGP_loot_options_min_EP_amount_label:SetTextColor(1, 1, 1);
@@ -12026,14 +12026,14 @@
 											</OnEnterPressed>
 											<OnEditFocusLost>
 												local value = self:GetText();
-												if not tonumber(value) or tonumber(value) == CEPGP.Loot.MinReq[2] then
-													self:SetText(tostring(CEPGP.Loot.MinReq[2]));
+												if not tonumber(value) or tonumber(value) == CEPGP_Lore.Loot.MinReq[2] then
+													self:SetText(tostring(CEPGP_Lore.Loot.MinReq[2]));
 													return;
 												end
-												CEPGP.Loot.MinReq[2] = tonumber(self:GetText());
+												CEPGP_Lore.Loot.MinReq[2] = tonumber(self:GetText());
 											</OnEditFocusLost>
 											<OnShow>
-												self:SetText(CEPGP.Loot.MinReq[2]);
+												self:SetText(CEPGP_Lore.Loot.MinReq[2]);
 											</OnShow>
 										</Scripts>
 									</EditBox>
@@ -12051,7 +12051,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.ShowPass = self:GetChecked();
+												CEPGP_Lore.Loot.ShowPass = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12076,7 +12076,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.AutoSort = self:GetChecked();
+												CEPGP_Lore.Loot.AutoSort = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12101,7 +12101,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.PassRolls = self:GetChecked();
+												CEPGP_Lore.Loot.PassRolls = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12111,7 +12111,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												if CEPGP.Loot.PassRolls then
+												if CEPGP_Lore.Loot.PassRolls then
 													self:SetChecked(true);
 												else
 													self:SetChecked(false);
@@ -12133,7 +12133,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.HighestRollIncludesPass = self:GetChecked();
+												CEPGP_Lore.Loot.HighestRollIncludesPass = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12143,7 +12143,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												if CEPGP.Loot.HighestRollIncludesPass then
+												if CEPGP_Lore.Loot.HighestRollIncludesPass then
 													self:SetChecked(true);
 												else
 													self:SetChecked(false);
@@ -12165,7 +12165,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.RollAnnounce = self:GetChecked();
+												CEPGP_Lore.Loot.RollAnnounce = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12175,7 +12175,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												if CEPGP.Loot.RollAnnounce then
+												if CEPGP_Lore.Loot.RollAnnounce then
 													self:SetChecked(true);
 												else
 													self:SetChecked(false);
@@ -12197,7 +12197,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.ResolveRolls = self:GetChecked();
+												CEPGP_Lore.Loot.ResolveRolls = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12207,7 +12207,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												if CEPGP.Loot.ResolveRolls then
+												if CEPGP_Lore.Loot.ResolveRolls then
 													self:SetChecked(true);
 												else
 													self:SetChecked(false);
@@ -12250,10 +12250,10 @@
 												<Scripts>
 													<OnClick>
 														if self:GetChecked() then
-															CEPGP.Loot.RaidVisibility[1] = true;
+															CEPGP_Lore.Loot.RaidVisibility[1] = true;
 														else
-															CEPGP.Loot.RaidVisibility[1] = false;
-															CEPGP.Loot.RaidVisibility[2] = false;
+															CEPGP_Lore.Loot.RaidVisibility[1] = false;
+															CEPGP_Lore.Loot.RaidVisibility[2] = false;
 															CEPGP_messageGroup("RaidAssistLootClosed", "assists");
 															
 															CEPGP_loot_options_dist_raidwide_check:SetChecked(false);
@@ -12288,22 +12288,22 @@
 																else
 																	_G["CEPGP_loot_assist_rank_" .. i .. "_check"]:Enable();
 																	_G["CEPGP_loot_assist_rank_" .. i .. "_check_label"]:SetTextColor(1, 1, 1);
-																	_G["CEPGP_loot_assist_rank_" .. i .. "_check"]:SetChecked(CEPGP.Loot.RaidVisibility[3][i-1]);
+																	_G["CEPGP_loot_assist_rank_" .. i .. "_check"]:SetChecked(CEPGP_Lore.Loot.RaidVisibility[3][i-1]);
 																end
 															end
 														end
 														
 														if self:GetChecked() then
-															CEPGP.Loot.RaidVisibility[2] = true;
+															CEPGP_Lore.Loot.RaidVisibility[2] = true;
 															CEPGP_loot_options_dist_assist_check:Disable();
 															CEPGP_loot_options_dist_assist_check:SetChecked(true);
 															CEPGP_loot_options_dist_assist_check_label:SetTextColor(0.5, 0.5, 0.5);
 															toggleRanks(true);
 														else
-															CEPGP.Loot.RaidVisibility[2] = false;
+															CEPGP_Lore.Loot.RaidVisibility[2] = false;
 															CEPGP_loot_options_dist_assist_check:Enable();
 															CEPGP_loot_options_dist_assist_check_label:SetTextColor(1, 1, 1);
-															if not CEPGP.Loot.RaidVisibility[1] then
+															if not CEPGP_Lore.Loot.RaidVisibility[1] then
 																CEPGP_loot_options_dist_assist_check:SetChecked(false);
 															end
 															toggleRanks(false);
@@ -12379,10 +12379,10 @@
 										</Layers>
 										<Scripts>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.AutoShow);
+												self:SetChecked(CEPGP_Lore.Loot.AutoShow);
 											</OnShow>
 											<OnClick>
-												CEPGP.Loot.AutoShow = self:GetChecked();
+												CEPGP_Lore.Loot.AutoShow = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12404,7 +12404,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.AutoPass = self:GetChecked();
+												CEPGP_Lore.Loot.AutoPass = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12414,7 +12414,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.AutoPass);
+												self:SetChecked(CEPGP_Lore.Loot.AutoPass);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -12432,7 +12432,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.PRDifference = self:GetChecked();
+												CEPGP_Lore.Loot.PRDifference = self:GetChecked();
 												if self:GetChecked() then
 													CEPGP_respond_gp_change:Show();
 												else
@@ -12447,7 +12447,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.PRDifference);
+												self:SetChecked(CEPGP_Lore.Loot.PRDifference);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -12465,7 +12465,7 @@
 										</Layers>
 										<Scripts>
 											<OnClick>
-												CEPGP.Loot.Acknowledge = self:GetChecked();
+												CEPGP_Lore.Loot.Acknowledge = self:GetChecked();
 											</OnClick>
 											<OnEnter>
 												GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12475,7 +12475,7 @@
 												GameTooltip:Hide();
 											</OnLeave>
 											<OnShow>
-												self:SetChecked(CEPGP.Loot.Acknowledge);
+												self:SetChecked(CEPGP_Lore.Loot.Acknowledge);
 											</OnShow>
 										</Scripts>
 									</CheckButton>
@@ -12580,7 +12580,7 @@
 				CEPGP_loot_options_keywords_scrollframe:SetWidth(width-20);
 				CEPGP_loot_options_keywords_scrollframe_container:SetWidth(width-20);
 				
-				if not CEPGP.Loot.ExtraKeywords then CEPGP.Loot.ExtraKeywords = {Enabled = false}; end
+				if not CEPGP_Lore.Loot.ExtraKeywords then CEPGP_Lore.Loot.ExtraKeywords = {Enabled = false}; end
 				
 				CEPGP_loot_options_scrollframe_container_label_personal:SetPoint("LEFT", CEPGP_loot_options_scrollframe_container_label_lootmaster, "LEFT", width/1.75, 0);
 				
@@ -12596,31 +12596,31 @@
 				
 				for i = 1, 4 do
 					local frame = _G[self:GetName() .. "_preview_" .. i];
-					if CEPGP.Loot.GUI.Buttons[i][1] then
+					if CEPGP_Lore.Loot.GUI.Buttons[i][1] then
 						frame:Show();
 					else
 						frame:Hide();
 					end
-					frame:SetText(CEPGP.Loot.GUI.Buttons[i][2]);
+					frame:SetText(CEPGP_Lore.Loot.GUI.Buttons[i][2]);
 					
 					frame = self:GetName();
 					
 					
-					_G[frame .. "_" .. i .. "_enabled_check"]:SetChecked(CEPGP.Loot.GUI.Buttons[i][1]);
-					_G[frame .. "_" .. i .. "_text"]:SetText(CEPGP.Loot.GUI.Buttons[i][2]);
-					_G[frame .. "_" .. i .. "_discount"]:SetText(tostring(CEPGP.Loot.GUI.Buttons[i][3]));
-					_G[frame .. "_" .. i .. "_whisper_edit"]:SetText(CEPGP.Loot.GUI.Buttons[i][4]);
+					_G[frame .. "_" .. i .. "_enabled_check"]:SetChecked(CEPGP_Lore.Loot.GUI.Buttons[i][1]);
+					_G[frame .. "_" .. i .. "_text"]:SetText(CEPGP_Lore.Loot.GUI.Buttons[i][2]);
+					_G[frame .. "_" .. i .. "_discount"]:SetText(tostring(CEPGP_Lore.Loot.GUI.Buttons[i][3]));
+					_G[frame .. "_" .. i .. "_whisper_edit"]:SetText(CEPGP_Lore.Loot.GUI.Buttons[i][4]);
 				end
 				
-				CEPGP_loot_options_announce_edit:SetText(CEPGP.Loot.Announcement);
-				CEPGP_options_auto_pass_check:SetChecked(CEPGP.Loot.AutoPass);
-				CEPGP_options_announcement_suppression_check:SetChecked(CEPGP.Loot.SuppressResponses);
-				CEPGP_loot_options_min_EP_check:SetChecked(CEPGP.Loot.MinReq[1]);
-				CEPGP_loot_options_min_EP_amount:SetText(CEPGP.Loot.MinReq[2]);
-				CEPGP_loot_options_show_passes_check:SetChecked(CEPGP.Loot.ShowPass);
-				CEPGP_loot_options_enforce_PR_sorting_check:SetChecked(CEPGP.Loot.AutoSort);
-				CEPGP_loot_options_dist_assist_check:SetChecked(CEPGP.Loot.RaidVisibility[1]);
-				CEPGP_loot_options_dist_raidwide_check:SetChecked(CEPGP.Loot.RaidVisibility[2]);
+				CEPGP_loot_options_announce_edit:SetText(CEPGP_Lore.Loot.Announcement);
+				CEPGP_options_auto_pass_check:SetChecked(CEPGP_Lore.Loot.AutoPass);
+				CEPGP_options_announcement_suppression_check:SetChecked(CEPGP_Lore.Loot.SuppressResponses);
+				CEPGP_loot_options_min_EP_check:SetChecked(CEPGP_Lore.Loot.MinReq[1]);
+				CEPGP_loot_options_min_EP_amount:SetText(CEPGP_Lore.Loot.MinReq[2]);
+				CEPGP_loot_options_show_passes_check:SetChecked(CEPGP_Lore.Loot.ShowPass);
+				CEPGP_loot_options_enforce_PR_sorting_check:SetChecked(CEPGP_Lore.Loot.AutoSort);
+				CEPGP_loot_options_dist_assist_check:SetChecked(CEPGP_Lore.Loot.RaidVisibility[1]);
+				CEPGP_loot_options_dist_raidwide_check:SetChecked(CEPGP_Lore.Loot.RaidVisibility[2]);
 				
 				--[[	Display Configuration	]]--
 				
@@ -12630,7 +12630,7 @@
 					CEPGP_loot_options_dist_assist_check_label:SetTextColor(0.5, 0.5, 0.5);
 				end
 				
-				if CEPGP.Loot.ExtraKeywords.Enabled then
+				if CEPGP_Lore.Loot.ExtraKeywords.Enabled then
 					CEPGP_loot_options_keywords:SetAlpha(1);
 					CEPGP_loot_options_keywords:SetHeight(CEPGP_loot_options_keywords_scrollframe_label:GetTop()-CEPGP_loot_options_keywords_confirm:GetBottom()+10);
 					CEPGP_loot_options_keywords_scrollframe:Show();	--	This frame is hidden by default because setting the alpha to 0 doesn't stop it from utilising the scroll wheel on mouseover
@@ -12744,7 +12744,7 @@
 														self:RegisterForClicks('LeftButtonDown');
 													</OnLoad>
 													<OnClick>
-														CEPGP.Standby.Enabled = self:GetChecked();
+														CEPGP_Lore.Standby.Enabled = self:GetChecked();
 													</OnClick>
 													<OnEnter>
 														GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT");
@@ -12790,13 +12790,13 @@
 														if not CEPGP_isNumber(value) then
 															if string.find(self:GetText(), "%%") then
 																self:SetText(string.sub(value, 0, string.find(value, "%%")-1));
-																CEPGP.Standby.Percent = tonumber(value);
+																CEPGP_Lore.Standby.Percent = tonumber(value);
 															else
 																CEPGP_print("Standby percent must contain numbers only", true);
-																self:SetText(tostring(CEPGP.Standby.Percent));
+																self:SetText(tostring(CEPGP_Lore.Standby.Percent));
 															end
-														elseif CEPGP.Standby.Percent ~= tonumber(value) then
-															CEPGP.Standby.Percent = tonumber(value);
+														elseif CEPGP_Lore.Standby.Percent ~= tonumber(value) then
+															CEPGP_Lore.Standby.Percent = tonumber(value);
 															CEPGP_print("Standby EP percent updated");
 														end
 													</OnEditFocusLost>
@@ -12820,20 +12820,20 @@
 													</OnLoad>
 													<OnClick>
 														if self:GetChecked() then
-															CEPGP.Standby.Share = true;
-															local limit = #CEPGP.Standby.Roster;
+															CEPGP_Lore.Standby.Share = true;
+															local limit = #CEPGP_Lore.Standby.Roster;
 															local count = 1;
-															--for _, t in pairs(CEPGP.Standby.Roster) do
+															--for _, t in pairs(CEPGP_Lore.Standby.Roster) do
 															if limit > 0 then
 																C_Timer.NewTicker(1, function()
-																	local t = CEPGP.Standby.Roster[count];
+																	local t = CEPGP_Lore.Standby.Roster[count];
 																	local message = "StandbyListAdd;"..t[1]..";"..t[2]..";"..t[3]..";"..t[4]..";"..t[5]..";"..t[6]..";"..t[8];
 																	CEPGP_addAddonMsg(message, "RAID");
 																	count = count + 1;
 																end, limit);
 															end
 														else
-															CEPGP.Standby.Share = false;
+															CEPGP_Lore.Standby.Share = false;
 														end
 													</OnClick>
 													<OnEnter>
@@ -12863,9 +12863,9 @@
 													</OnLoad>
 													<OnClick>
 														if self:GetChecked() then
-															CEPGP.Standby.Offline = true;
+															CEPGP_Lore.Standby.Offline = true;
 														else
-															CEPGP.Standby.Offline = false;
+															CEPGP_Lore.Standby.Offline = false;
 														end
 													</OnClick>
 													<OnEnter>
@@ -12895,9 +12895,9 @@
 													</OnLoad>
 													<OnClick>
 														if self:GetChecked() then
-															CEPGP.Standby.AcceptWhispers = true;
+															CEPGP_Lore.Standby.AcceptWhispers = true;
 														else
-															CEPGP.Standby.AcceptWhispers = false;
+															CEPGP_Lore.Standby.AcceptWhispers = false;
 														end
 													</OnClick>
 													<OnEnter>
@@ -12939,15 +12939,15 @@
 														self:ClearFocus();
 													</OnEnterPressed>
 													<OnShow>
-														self:SetText(CEPGP.Standby.Keyword);
+														self:SetText(CEPGP_Lore.Standby.Keyword);
 													</OnShow>
 													<OnEditFocusLost>
 														self:HighlightText(0,0);
 														local msg = tostring(self:GetText());
 														if msg == "" then
-															self:SetText(CEPGP.Standby.Keyword);
-														elseif CEPGP.Standby.Keyword ~= msg then
-															CEPGP.Standby.Keyword = msg;
+															self:SetText(CEPGP_Lore.Standby.Keyword);
+														elseif CEPGP_Lore.Standby.Keyword ~= msg then
+															CEPGP_Lore.Standby.Keyword = msg;
 															CEPGP_print("Whisper message for standby EP updated");
 														end
 													</OnEditFocusLost>
@@ -12983,8 +12983,8 @@
 													<OnClick>
 														if self:GetChecked() then
 															CEPGP_options_standby_ep_byrank_check:SetChecked(false);
-															CEPGP.Standby.Manual = true;
-															CEPGP.Standby.ByRank = false;
+															CEPGP_Lore.Standby.Manual = true;
+															CEPGP_Lore.Standby.ByRank = false;
 															CEPGP_toggleStandbyRanks(false);
 														else
 															self:SetChecked(true);
@@ -13018,8 +13018,8 @@
 													<OnClick>
 														if self:GetChecked() then
 															CEPGP_options_standby_ep_manual_check:SetChecked(false);
-															CEPGP.Standby.Manual = false;
-															CEPGP.Standby.ByRank = true;
+															CEPGP_Lore.Standby.Manual = false;
+															CEPGP_Lore.Standby.ByRank = true;
 															CEPGP_toggleStandbyRanks(true);
 														else
 															self:SetChecked(true);
@@ -13124,7 +13124,7 @@
 														<Scripts>
 															<OnClick>
 																CEPGP_setCriteria(1, "Standby");
-																CEPGP.Standby.Roster = CEPGP_tSort(CEPGP.Standby.Roster, 1);
+																CEPGP_Lore.Standby.Roster = CEPGP_tSort(CEPGP_Lore.Standby.Roster, 1);
 															</OnClick>
 														</Scripts>
 													</Button>
@@ -13135,7 +13135,7 @@
 														<Scripts>
 															<OnClick>
 																CEPGP_setCriteria(2, "Standby");
-																CEPGP.Standby.Roster = CEPGP_tSort(CEPGP.Standby.Roster, 2);
+																CEPGP_Lore.Standby.Roster = CEPGP_tSort(CEPGP_Lore.Standby.Roster, 2);
 															</OnClick>
 														</Scripts>
 													</Button>
@@ -13146,7 +13146,7 @@
 														<Scripts>
 															<OnClick>
 																CEPGP_setCriteria(4, "Standby");
-																CEPGP.Standby.Roster = CEPGP_tSort(CEPGP.Standby.Roster, 4);
+																CEPGP_Lore.Standby.Roster = CEPGP_tSort(CEPGP_Lore.Standby.Roster, 4);
 															</OnClick>
 														</Scripts>
 													</Button>
@@ -13157,7 +13157,7 @@
 														<Scripts>
 															<OnClick>
 																CEPGP_setCriteria(5, "Standby");
-																CEPGP.Standby.Roster = CEPGP_tSort(CEPGP.Standby.Roster, 5);
+																CEPGP_Lore.Standby.Roster = CEPGP_tSort(CEPGP_Lore.Standby.Roster, 5);
 															</OnClick>
 														</Scripts>
 													</Button>
@@ -13168,7 +13168,7 @@
 														<Scripts>
 															<OnClick>
 																CEPGP_setCriteria(6, "Standby");
-																CEPGP.Standby.Roster = CEPGP_tSort(CEPGP.Standby.Roster, 6);
+																CEPGP_Lore.Standby.Roster = CEPGP_tSort(CEPGP_Lore.Standby.Roster, 6);
 															</OnClick>
 														</Scripts>
 													</Button>
@@ -13179,7 +13179,7 @@
 														<Scripts>
 															<OnClick>
 																CEPGP_setCriteria(7, "Standby");
-																CEPGP.Standby.Roster = CEPGP_tSort(CEPGP.Standby.Roster, 7);
+																CEPGP_Lore.Standby.Roster = CEPGP_tSort(CEPGP_Lore.Standby.Roster, 7);
 															</OnClick>
 														</Scripts>
 													</Button>
@@ -13285,15 +13285,15 @@
 		</Frames>
 		<Scripts>
 			<OnShow>
-				CEPGP_options_standby_ep_check:SetChecked(CEPGP.Standby.Enabled);
-				CEPGP_options_standby_ep_val:SetText(CEPGP.Standby.Percent);
-				CEPGP_options_standby_ep_share_check:SetChecked(CEPGP.Standby.Share);
-				CEPGP_options_standby_ep_offline_check:SetChecked(CEPGP.Standby.Offline);
-				CEPGP_options_standby_ep_accept_whispers_check:SetChecked(CEPGP.Standby.AcceptWhispers);
-				CEPGP_options_standby_ep_message_val:SetText(CEPGP.Standby.Keyword);
-				CEPGP_options_standby_ep_byrank_check:SetChecked(CEPGP.Standby.ByRank);
-				CEPGP_options_standby_ep_manual_check:SetChecked(CEPGP.Standby.Manual);
-				CEPGP_toggleStandbyRanks(CEPGP.Standby.ByRank);
+				CEPGP_options_standby_ep_check:SetChecked(CEPGP_Lore.Standby.Enabled);
+				CEPGP_options_standby_ep_val:SetText(CEPGP_Lore.Standby.Percent);
+				CEPGP_options_standby_ep_share_check:SetChecked(CEPGP_Lore.Standby.Share);
+				CEPGP_options_standby_ep_offline_check:SetChecked(CEPGP_Lore.Standby.Offline);
+				CEPGP_options_standby_ep_accept_whispers_check:SetChecked(CEPGP_Lore.Standby.AcceptWhispers);
+				CEPGP_options_standby_ep_message_val:SetText(CEPGP_Lore.Standby.Keyword);
+				CEPGP_options_standby_ep_byrank_check:SetChecked(CEPGP_Lore.Standby.ByRank);
+				CEPGP_options_standby_ep_manual_check:SetChecked(CEPGP_Lore.Standby.Manual);
+				CEPGP_toggleStandbyRanks(CEPGP_Lore.Standby.ByRank);
 				
 				local width = self:GetWidth();
 				local height = self:GetHeight();

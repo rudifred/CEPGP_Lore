@@ -1,9 +1,9 @@
 ## Interface:20501
-## Title: Classic EPGP
+## Title: Classic EPGP Lore
 ## Author: Alumian
 ## Notes: Classic EPGP handles your guild's EPGP and master loot distribution. Usage: /CEPGP or /cep for options
 ## OptionalDependencies: AceAddon-3.0, AceComm-3.0, CallbackHandler-1.0, LibDataBroker-1.1, LibDBIcon-1.0, LibStub
-## SavedVariables: CEPGP
+## SavedVariables: CEPGP_Lore
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua

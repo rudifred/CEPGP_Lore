@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP");
+local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP_Lore");
 
 function CEPGP_handleComms(event, arg1, arg2, response, lootGUID)
 	
@@ -11,7 +11,7 @@ function CEPGP_handleComms(event, arg1, arg2, response, lootGUID)
 	if not response and (string.lower(arg1) ~= "!info" and string.lower(arg1) ~= "!infoclass" and string.lower(arg1) ~= "!infoguild" and string.lower(arg1) ~= "!inforaid") then
 		response = arg1;
 	end
-	local reason = CEPGP.Loot.GUI.Buttons[response] and CEPGP.Loot.GUI.Buttons[response][2] or CEPGP_Info.LootSchema[response] or CEPGP_getResponse(CEPGP_getResponseIndex(response));
+	local reason = CEPGP_Lore.Loot.GUI.Buttons[response] and CEPGP_Lore.Loot.GUI.Buttons[response][2] or CEPGP_Info.LootSchema[response] or CEPGP_getResponse(CEPGP_getResponseIndex(response));
 
 	if event == "CHAT_MSG_WHISPER" and response then
 		local success, failMsg = pcall(function()
@@ -34,9 +34,9 @@ function CEPGP_handleComms(event, arg1, arg2, response, lootGUID)
 				return true;
 			end
 			
-			if (response == 6 and CEPGP.Loot.PassRolls) or response ~= 6 then
+			if (response == 6 and CEPGP_Lore.Loot.PassRolls) or response ~= 6 then
 				roll = math.ceil(math.random(1,100));
-				if CEPGP.Loot.ResolveRolls then
+				if CEPGP_Lore.Loot.ResolveRolls then
 					checkRoll(name);
 				end
 			end
@@ -65,24 +65,24 @@ function CEPGP_handleComms(event, arg1, arg2, response, lootGUID)
 				class = CEPGP_Info.Guild.Roster[name][2];
 				inGuild = true;
 			end
-			if CEPGP_getResponse(arg1) or CEPGP_getResponseIndex(arg1) or (CEPGP.Loot.ShowPass and response == 6) or response < 6 then
+			if CEPGP_getResponse(arg1) or CEPGP_getResponseIndex(arg1) or (CEPGP_Lore.Loot.ShowPass and response == 6) or response < 6 then
 				CEPGP_addAddonMsg(name..";distslot;"..CEPGP_Info.Loot.DistEquipSlot, "WHISPER", name);
 			end
-			if not CEPGP.Loot.DelayResponses then
-				if CEPGP_Info.Loot.ItemsTable[name] and CEPGP.Loot.Resubmit then
-					if not CEPGP.Loot.SuppressResubmitResponses then
+			if not CEPGP_Lore.Loot.DelayResponses then
+				if CEPGP_Info.Loot.ItemsTable[name] and CEPGP_Lore.Loot.Resubmit then
+					if not CEPGP_Lore.Loot.SuppressResubmitResponses then
 						CEPGP_sendChatMessage(name .. " changed their response to " .. reason .. " (" .. PR .. ")", "RAID");
 					end
 				elseif not CEPGP_Info.Loot.ItemsTable[name] then
-					if inGuild and not CEPGP.Loot.SuppressResponses then
+					if inGuild and not CEPGP_Lore.Loot.SuppressResponses then
 						if (CEPGP_getResponse(arg1) or CEPGP_getResponseIndex(arg1) or response < 5) then
-							if CEPGP.Loot.RollAnnounce then
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (" .. PR .. " PR) (Rolled " .. roll .. ")", CEPGP.LootChannel);
+							if CEPGP_Lore.Loot.RollAnnounce then
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (" .. PR .. " PR) (Rolled " .. roll .. ")", CEPGP_Lore.LootChannel);
 							else
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (" .. PR .. " PR)", CEPGP.LootChannel);
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (" .. PR .. " PR)", CEPGP_Lore.LootChannel);
 							end
 						end
-					elseif not CEPGP.Loot.SuppressResponses then
+					elseif not CEPGP_Lore.Loot.SuppressResponses then
 						local total = GetNumGroupMembers();
 						for i = 1, total do
 							if name == GetRaidRosterInfo(i) then
@@ -90,10 +90,10 @@ function CEPGP_handleComms(event, arg1, arg2, response, lootGUID)
 							end
 						end
 						if (CEPGP_getResponse(arg1) or CEPGP_getResponseIndex(arg1) or response < 5) then
-							if CEPGP.Loot.RollAnnounce then
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (Non-guild member) (Rolled " .. roll .. ")", CEPGP.LootChannel);
+							if CEPGP_Lore.Loot.RollAnnounce then
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (Non-guild member) (Rolled " .. roll .. ")", CEPGP_Lore.LootChannel);
 							else
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (Non-guild member)", CEPGP.LootChannel);
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (Non-guild member)", CEPGP_Lore.LootChannel);
 							end
 						end
 					end
@@ -217,7 +217,7 @@ end
 function CEPGP_handleCombat(name)
 	if (((GetLootMethod() == "master" and CEPGP_isML() == 0) or (GetLootMethod() == "group" and UnitIsGroupLeader("player"))) and CEPGP_ntgetn(CEPGP_Info.Guild.Roster) > 0) or CEPGP_Info.Debug then
 		local localName = L[name];
-		local EP = CEPGP.EP.BossEP[name];
+		local EP = CEPGP_Lore.EP.BossEP[name];
 		local plurals = name == "The Four Horsemen" or name == "The Silithid Royalty" or name == "The Twin Emperors";
 		local message = format(L["%s " .. (plurals and "have" or "has") .. " been defeated! %d EP has been awarded to the raid"], localName, EP);
 		local callback = function()
@@ -233,8 +233,8 @@ function CEPGP_handleCombat(name)
 			end
 			
 			local function awardStandbyEP(localName, EP)
-				if CEPGP.Standby.Enabled and tonumber(CEPGP.Standby.Percent) > 0 then
-					CEPGP_addStandbyEP(EP*(tonumber(CEPGP.Standby.Percent)/100), localName);
+				if CEPGP_Lore.Standby.Enabled and tonumber(CEPGP_Lore.Standby.Percent) > 0 then
+					CEPGP_addStandbyEP(EP*(tonumber(CEPGP_Lore.Standby.Percent)/100), localName);
 				end
 			end
 			
@@ -345,10 +345,10 @@ function CEPGP_handleLoot(event, arg1, arg2)
 					if distGP then
 						if response then
 							local message = "Awarded " .. itemName .. " to ".. player .. " for " .. gpValue*rate .. " GP (" .. response .. ")";
-							SendChatMessage(message, CEPGP.Channel, CEPGP_Info.Language);
+							SendChatMessage(message, CEPGP_Lore.Channel, CEPGP_Info.Language);
 						else
 							local message = "Awarded " .. itemName .. " to ".. player .. " for " .. gpValue*rate .. " GP";
-							SendChatMessage(message, CEPGP.Channel, CEPGP_Info.Language);
+							SendChatMessage(message, CEPGP_Lore.Channel, CEPGP_Info.Language);
 						end
 						CEPGP_addGP(player, gpValue*rate, id, link, nil, response);
 					else
@@ -357,27 +357,27 @@ function CEPGP_handleLoot(event, arg1, arg2)
 							local EP, GP = CEPGP_getEPGP(player, index);
 							if response then
 								if response == "Highest Roll (Free)" then
-									SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free (Highest Roll)", CEPGP.Channel, CEPGP_Info.Language);
+									SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free (Highest Roll)", CEPGP_Lore.Channel, CEPGP_Info.Language);
 									CEPGP_addTraffic(player, UnitName("player"), response, EP, EP, GP, GP, id, tStamp);
 								else
-									SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free", CEPGP.Channel, CEPGP_Info.Language);
+									SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free", CEPGP_Lore.Channel, CEPGP_Info.Language);
 									CEPGP_addTraffic(player, UnitName("player"), "Given for Free", EP, EP, GP, GP, id, tStamp);
 								end
 							else
-								SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free", CEPGP.Channel, CEPGP_Info.Language);
+								SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free", CEPGP_Lore.Channel, CEPGP_Info.Language);
 								CEPGP_addTraffic(player, UnitName("player"), "Given for Free", EP, EP, GP, GP, id, tStamp);
 							end
 						else
 							local index = CEPGP_getIndex(player);
 							if index then
-								SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free (Exclusion List)", CEPGP.Channel, CEPGP_Info.Language);
+								SendChatMessage("Awarded " .. itemName .. " to ".. player .. " for free (Exclusion List)", CEPGP_Lore.Channel, CEPGP_Info.Language);
 								CEPGP_addTraffic(player, UnitName("player"), "Given for Free (Exclusion List)", nil, nil, nil, nil, id, tStamp);
 							end
 						end
 					end
 					
 				else
-					SendChatMessage(itemName .. " has been distributed without EPGP", CEPGP.Channel, CEPGP_Info.Language);
+					SendChatMessage(itemName .. " has been distributed without EPGP", CEPGP_Lore.Channel, CEPGP_Info.Language);
 					CEPGP_addTraffic(player, UnitName("player"), "Manually Awarded", "", "", "", "", id, tStamp);
 				end
 			end;
