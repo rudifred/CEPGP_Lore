@@ -214,6 +214,8 @@ CEPGP_Info = {
 	}
 };	
 
+CEPGP_DFB_LoadedAddon = false
+
 CEPGP_Lore = {};
 
 local L = LibStub("AceLocale-3.0"):GetLocale("CEPGP_Lore");
@@ -252,6 +254,11 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 				CEPGP_print(failMsg);
 			end
 		end);
+
+	elseif event == "ADDON_LOADED" and arg1 == "CEPGP_Lore" and CEPGP_DFB_LoadedAddon == false then
+			self:UnregisterEvent("ADDON_LOADED")
+			CEPGP_DFB_LoadedAddon = true
+			CEPGP_DFB_init()
 		
 	elseif event == "GUILD_ROSTER_UPDATE" or event == "GROUP_ROSTER_UPDATE" then
 		CEPGP_rosterUpdate(event);
@@ -329,6 +336,40 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 			CEPGP_IncAddonMsg(message, channel, sender);
 		end
 		return;
+
+	elseif event == "TRADE_SHOW" then
+		if CEPGP_DFB_Distributing and CEPGP_DFB_DistPlayerBtn then
+			PickupContainerItem(CEPGP_DFB_BagId, CEPGP_DFB_SlotId)
+			ClickTradeButton(1)
+			if CEPGP_DFB_distItemLink ~= GetTradePlayerItemLink(1) then
+				CEPGP_DFB_error_open()
+			end
+		end
+
+	elseif event == "TRADE_ACCEPT_UPDATE" then
+		if CEPGP_DFB_Distributing and CEPGP_DFB_DistPlayerBtn then
+			CEPGP_distribute_popup_pass:Hide()
+			CEPGP_ListButton_OnClick(CEPGP_DFB_DistPlayerBtn, "LeftButton")
+		end
+
+	elseif event == "TRADE_REQUEST_CANCEL" then
+		if CEPGP_DFB_Distributing and CEPGP_DFB_DistPlayerBtn and not CEPGP_DFB_error:IsShown() then
+			CEPGP_distribute_popup:Hide()
+			CEPGP_DFB_confirmation:Show()
+		end
+
+	elseif event == "ITEM_LOCKED" then
+		if CEPGP_DFB_frame:IsShown() and not CEPGP_DFB_DistPlayerBtn and IsShiftKeyDown() then
+			CEPGP_DFB_BagId = arg1
+			CEPGP_DFB_SlotId = arg2
+			if arg2 ~= nil then  -- not equipment items
+				ClearCursor()
+				_, _, _, _, _, _, itemLink = GetContainerItemInfo(CEPGP_DFB_BagId, CEPGP_DFB_SlotId)
+				if itemLink then
+					CEPGP_DFB_LootFrame_Update(itemLink)
+				end
+			end
+		end
 	end
 	
 	if CEPGP_Info.Active[1] or CEPGP_Info.Debug then --EPGP and loot distribution related 
