@@ -1,0 +1,9 @@
+Classic EPGP License
+
+The author of this addon hereby grants you all rights to this software with the following condition:
+
+1. You may make modifications to the addon and redistribute it provided that:
+	a. You include an unmodified copy of this license with the redistribution.
+	b. You do not require payment in any form to make use of any component of the addon or your modifications.
+	c. Any redistributions should clearly outline that it is a derivative of CEPGP
+	d. None of your modifications produce, facilitate or otherwise permit exploits, malicious behaviour or in any way act as a violation of the World of Warcraft UI Add-On Development Policy.
