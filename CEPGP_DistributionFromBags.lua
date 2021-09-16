@@ -89,7 +89,7 @@ SlashCmdList["CEPGPDFB"] = CEPGP_DFB_SlashCmd
 
 function CEPGP_DFB_init()
 	
-	CEPGP_addPlugin("CEPGP_DistributionFromBags", nil, CEPGP_DFB_Enabled, CEPGP_DFB_toggle);
+	--CEPGP_addPlugin("CEPGP_DistributionFromBags", nil, CEPGP_DFB_Enabled, CEPGP_DFB_toggle);
 
 	if (_G.CEPGP_Lore) then
 		_G.CEPGP_distribute_popup_give = CEPGP_distribute_popup_give_Hook
