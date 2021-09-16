@@ -34,3 +34,4 @@ Core.lua
 Libs\libs.xml
 Locale\locales.xml
 CEPGP_DistributionFromBags.lua
+
