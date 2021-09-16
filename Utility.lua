@@ -1330,7 +1330,7 @@ function CEPGP_calcGP(link, quantity, id)
 		end
 		
 		if ilvl and rarity and slot then
-			return math.floor((((CEPGP_Lore.GP.Base * (CEPGP_Lore.GP.Multiplier^((ilvl-120/13) + (rarity-4))) * slot)*CEPGP_Lore.GP.Mod)*quantity)*raidScaling);
+			return math.floor((((CEPGP_Lore.GP.Base * (CEPGP_Lore.GP.Multiplier^(((ilvl-120)/13) + (rarity-4))) * slot)*CEPGP_Lore.GP.Mod)*quantity)*raidScaling);
 		else
 			return 0;
 		end
