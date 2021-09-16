@@ -9847,7 +9847,7 @@
 												</Anchors>
 												<Layers>
 													<Layer level="OVERLAY">
-														<FontString name="$parent_text" inherits="GameFontNormal" text=" ^((ilvl/26)+(rarity-4)) x slot) x ">
+														<FontString name="$parent_text" inherits="GameFontNormal" text=" ^((ilvl-120/13)+(rarity-4)) x slot) x ">
 															<Color r="1" g="1" b="1"/>
 															<Anchors>
 																<Anchor point="LEFT" relativePoint="RIGHT" />																/>
