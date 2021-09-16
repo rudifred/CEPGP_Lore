@@ -13,8 +13,8 @@ CEPGP_DFB_distItemLink = nil
 CEPGP_DFB_BagId = 0
 CEPGP_DFB_SlotId = 0
 
-SLASH_CEPGPDFB1 = "/CEPDFB"
-SLASH_CEPGPDFB2 = "/cepdfb"
+SLASH_CEPGPDFB1 = "/DFB"
+SLASH_CEPGPDFB2 = "/dfb"
 
 --[[ SAVED VARIABLES ]]--
 CEPGP_DFB_No_Trade = false

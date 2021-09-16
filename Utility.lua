@@ -95,7 +95,7 @@ function CEPGP_initialise()
 				end
 			end
 		end
-		DEFAULT_CHAT_FRAME:AddMessage("|c00FFC100Classic EPGP Version: " .. CEPGP_Info.Version.Number .. " " .. CEPGP_Info.Version.Build .. " Loaded|r");
+		DEFAULT_CHAT_FRAME:AddMessage("|c00FFC100Classic EPGP <Lore> Version: " .. CEPGP_Info.Version.Number .. " " .. CEPGP_Info.Version.Build .. " Loaded|r");
 		if CEPGP_Lore.ChangelogVersion ~= CEPGP_Info.Version.Number then
 			CEPGP_print("A new version has been installed.");
 			CEPGP_Lore.ChangelogVersion = CEPGP_Info.Version.Number;
@@ -953,7 +953,7 @@ function CEPGP_initInterfaceOptions()
 	InterfaceOptions_AddCategory(panel.plugins);
 	InterfaceOptions_AddCategory(panel.standby);
 	
-	_G["CEPGP_interface_options_version"]:SetText("Classic EPGP Version " .. CEPGP_Info.Version.Number .. " " .. CEPGP_Info.Version.Build);
+	_G["CEPGP_interface_options_version"]:SetText("Classic EPGP <Lore> Version " .. CEPGP_Info.Version.Number .. " " .. CEPGP_Info.Version.Build);
 	
 	local varMap = {
 		["Alt"] = 				"Alt Management",

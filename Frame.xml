@@ -3787,7 +3787,7 @@
 		</Frames>
 		<Scripts>
 			<OnLoad inherit="prepend">
-				CEPGP_notice_text:SetText("Thank you for choosing to use Classic EPGP!\nI hope that you enjoy using this addon and I hope that it helps your guild\nhow ever you end up using it.\n\nJust one thing you should know - this addon needs to have\nfull control over your officer notes to maintain EPGP records.\nMeaning, as this addon attempts to maintain your records, it will overwrite\nany existing officer notes. Similarly, if you want your guild members to\nbe able to see their EP and GP values, they need to be able to see\nofficer notes too. Essentially, the addon can only see what you can see.\n\nThis addon is designed and really does work best if your\nyour whole guild (or at least your raid team) has it installed.\nThis will provide you with functions like loot council support\nand being able to see what items your raid members are wearing\nwhen you're distributing items.\n\nI hope you enjoy using the addon and if you have any feature requests or\nfind a bug, please submit a ticket on the addon GitHub page:\ngithub.com/Alumian/CEPGP-Retail");
+				CEPGP_notice_text:SetText("Thank you for choosing to use Classic EPGP Lore!\nI hope that you enjoy using this addon and I hope that it helps your guild\nhow ever you end up using it.\n\nJust one thing you should know - this addon needs to have\nfull control over your officer notes to maintain EPGP records.\nMeaning, as this addon attempts to maintain your records, it will overwrite\nany existing officer notes. Similarly, if you want your guild members to\nbe able to see their EP and GP values, they need to be able to see\nofficer notes too. Essentially, the addon can only see what you can see.\n\nThis addon is designed and really does work best if your\nyour whole guild (or at least your raid team) has it installed.\nThis will provide you with functions like loot council support\nand being able to see what items your raid members are wearing\nwhen you're distributing items.");
 				CEPGP_notice_frame:SetWidth(CEPGP_notice_text:GetStringWidth()+25);
 			</OnLoad>
 			<OnMouseDown>
@@ -6249,7 +6249,7 @@
 		</KeyValues>
 		<Layers>
 			<Layer level="OVERLAY">
-				<FontString name="$parent_heading" inherits="GameFontNormal" text="Classic EPGP End User License Agreement"/>
+				<FontString name="$parent_heading" inherits="GameFontNormal" text="Classic EPGP Lore End User License Agreement"/>
 				<FontString name="$parent_content" inherits="GameFontNormalSmall" justifyH="LEFT"/>
 			</Layer>
 		</Layers>
@@ -6284,7 +6284,7 @@
 				local heading, content = CEPGP_license_heading, CEPGP_license_content;
 				heading:SetPoint("TOP", 0, -20);
 				content:SetPoint("TOPLEFT", 20, -40);
-				local info = "The contents of this addon, excluding third-party resources, are copyrighted by the author with all rights reserved.\n\nDefinitions:\n1. \"The Software\" refers to CEPGP (Classic EPGP).\n2. \"Dependent Code\" refers to the requirement of having CEPGP listed as a dependency in the AddOn .toc (table of contents) file.\n\nThe author of this addon ehreby grants you the following rights:\n\n1. You may download this addon and run it for the intended purpose as an AddOn for World of Warcraft®.\n2. You may make modifications to the software for private use only, you may not publish or distribute any modified portion of the software.\n3. You may produce independent AddOns which use the software as dependent code for the purposes of:\n    a. Making use of functions provided by the software or\n    b. Modifying the behaviour of the software\n4. Do not modify the name of this addon, including the addon folders.\n5. This copyright notice shall be included in all copies or substantial portions of the Software.\n\nAll rights not explicitly addressed in this license are reserved by the copyright holder.\n\nBy using the software you are acknowledging that you understand and agree with the above terms and conditions.";
+				local info = "The contents of this addon, excluding third-party resources, are copyrighted by the author with all rights reserved.\n\nDefinitions:\n1. \"The Software\" refers to CEPGP (Classic EPGP Lore).\n2. \"Dependent Code\" refers to the requirement of having CEPGP listed as a dependency in the AddOn .toc (table of contents) file.\n\nThe author of this addon ehreby grants you the following rights:\n\n1. You may download this addon and run it for the intended purpose as an AddOn for World of Warcraft®.\n2. You may make modifications to the software for private use only, you may not publish or distribute any modified portion of the software.\n3. You may produce independent AddOns which use the software as dependent code for the purposes of:\n    a. Making use of functions provided by the software or\n    b. Modifying the behaviour of the software\n4. Do not modify the name of this addon, including the addon folders.\n5. This copyright notice shall be included in all copies or substantial portions of the Software.\n\nAll rights not explicitly addressed in this license are reserved by the copyright holder.\n\nBy using the software you are acknowledging that you understand and agree with the above terms and conditions.";
 				content:SetText(info);
 				self:SetWidth(content:GetStringWidth()+40);
 				self:SetHeight(heading:GetStringHeight() + content:GetStringHeight() + 50);
@@ -6900,7 +6900,7 @@
 								<Anchor point="TOP" />
 							</Anchors>
 						</FontString>
-						<FontString name="CEPGP_interface_options_author" inherits="GameFontNormalSmall" text="Author: Alumian">
+						<FontString name="CEPGP_interface_options_author" inherits="GameFontNormalSmall" text="Author: Alumian; Modified by Krypte-Myzrael">
 							<Anchors>
 								<Anchor point="TOP" relativePoint="BOTTOM" relativeTo="CEPGP_interface_options_version">
 									<AbsDimension x="0" y="-10" />
