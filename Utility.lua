@@ -659,8 +659,8 @@ function CEPGP_initSavedVars()
 	CEPGP_Lore.Channel = CEPGP_Lore.Channel or "Guild";
 	CEPGP_Lore.Exclusions = CEPGP_Lore.Exclusions or {false,false,false,false,false,false,false,false,false,false};
 	CEPGP_Lore.PollRate = CEPGP_Lore.PollRate or 0.0001;
-	CEPGP_Lore.Sync = CEPGP_Lore.Sync or {false, {
-			[0] = false,
+	CEPGP_Lore.Sync = CEPGP_Lore.Sync or {true, {
+			[0] = true, -- Guild lead default true
 			[1] = false,
 			[2] = false,
 			[3] = false,
