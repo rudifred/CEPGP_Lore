@@ -41,6 +41,7 @@ CEPGP_Info = {
 		
 	Active = 					{false, false},	--	Active state, queried for current raid
 	Debug =						false,
+	Debug2 =						false,
 	ElvUI =						false,
 	--IgnoreUpdates = 			false,
 	ImportingTraffic = 			false,
@@ -245,7 +246,7 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 		local success, failMsg = pcall(function()
 			CEPGP_initialise();
 			CEPGP_initMinimapIcon();
-			CEPGP_TBC_initialise()
+			CEPGP_TBC_initialise();
 			return;
 		end);
 		
@@ -376,10 +377,20 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 	if CEPGP_Info.Active[1] or CEPGP_Info.Debug then --EPGP and loot distribution related 
 		--	An encounter has been defeated
 		local function handleEncounter(event, arg1, arg5)
-			
 			if event == "ENCOUNTER_END" and arg5 == 1 then
 				local id = tonumber(arg1);
 				local name = CEPGP_EncounterInfo.ID[id];
+				if CEPGP_Info.Debug2 then
+					print("copy this part!=====================");
+					print(event);
+					print(arg1);
+					print(arg5);
+					print(id);
+					print(name);
+					print(CEPGP_Lore.EP.AutoAward[name]);
+					print(CEPGP_Lore.EP.BossEP[name])
+					print("copy this part!=====================");
+				end
 				if name then
 					if CEPGP_Lore.EP.AutoAward[name] and tonumber(CEPGP_Lore.EP.BossEP[name]) > 0 then
 						CEPGP_handleCombat(name);
@@ -457,7 +468,13 @@ function SlashCmdList.CEPGP(msg, editbox)
 		else
 			CEPGP_print("Debug Mode Disabled");
 		end
-	
+	elseif msg == "debug" then
+		CEPGP_Info.Debug2 = not CEPGP_Info.Debug2;
+		if CEPGP_Info.Debug2 then
+			CEPGP_print("Debug Mode Enabled");
+		else
+			CEPGP_print("Debug Mode Disabled");
+		end
 	elseif msg == "log" then
 		CEPGP_log:Show();
 		
