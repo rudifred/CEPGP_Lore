@@ -565,10 +565,81 @@ function CEPGP_UpdateTrafficScrollBar()
 	
 	for i = 1, #CEPGP_Lore.Traffic do
 		local name, issuer, action, EPB, EPA, GPB, GPA, item, tStamp, ID, GUID = CEPGP_Lore.Traffic[i][1] or "", CEPGP_Lore.Traffic[i][2] or "", CEPGP_Lore.Traffic[i][3] or "", CEPGP_Lore.Traffic[i][4] or "", CEPGP_Lore.Traffic[i][5] or "", CEPGP_Lore.Traffic[i][6] or "", CEPGP_Lore.Traffic[i][7] or "", CEPGP_Lore.Traffic[i][8] or "", CEPGP_Lore.Traffic[i][9], CEPGP_Lore.Traffic[i][10], CEPGP_Lore.Traffic[i][11];
+		local tmp, issuer_result, name_result, item_result;
 		if not tStamp then
 			tStamp = "";
 		end
-		if search ~= "" and (string.find(string.lower(name), string.lower(search)) or
+
+		if search ~= "" and (string.find(string.lower(search), "issuer:")) then -- keyword search
+
+			tmp,issuer_result = string.match(string.lower(search), "(.*):(.*)")  -- isolate search phrase
+			if issuer ~= "" and issuer_result ~= "" then
+				if (string.find(string.lower(issuer), string.lower(issuer_result))) then
+					results[matches] = {
+					[1] = name,
+					[2] = issuer,
+					[3] = action,
+					[4] = EPB,
+					[5] = EPA,
+					[6] = GPB,
+					[7] = GPA,
+					[8] = item,
+					[9] = tStamp,
+					[10] = ID,
+					[11] = GUID,
+					[12] = i	--	entry ID
+					};
+					matches = matches + 1;
+				end
+			end
+
+		elseif search ~= "" and (string.find(string.lower(search), "name:")) then -- keyword search
+
+			tmp,name_result = string.match(string.lower(search), "(.*):(.*)")  -- isolate search phrase
+			if name ~= "" and name_result ~= "" then
+				if (string.find(string.lower(name), string.lower(name_result))) then
+					results[matches] = {
+					[1] = name,
+					[2] = issuer,
+					[3] = action,
+					[4] = EPB,
+					[5] = EPA,
+					[6] = GPB,
+					[7] = GPA,
+					[8] = item,
+					[9] = tStamp,
+					[10] = ID,
+					[11] = GUID,
+					[12] = i	--	entry ID
+					};
+					matches = matches + 1;
+				end
+			end
+		
+		elseif search ~= "" and (string.find(string.lower(search), "item:")) then -- keyword search
+
+			tmp,item_result = string.match(string.lower(search), "(.*):(.*)")  -- isolate search phrase
+			if item ~= "" and item_result ~= "" then
+				if (string.find(string.lower(item), string.lower(item_result))) then
+					results[matches] = {
+					[1] = name,
+					[2] = issuer,
+					[3] = action,
+					[4] = EPB,
+					[5] = EPA,
+					[6] = GPB,
+					[7] = GPA,
+					[8] = item,
+					[9] = tStamp,
+					[10] = ID,
+					[11] = GUID,
+					[12] = i	--	entry ID
+					};
+					matches = matches + 1;
+				end
+			end
+
+		elseif search ~= "" and (string.find(string.lower(name), string.lower(search)) or -- generic search
 			string.find(string.lower(issuer), string.lower(search)) or
 			string.find(string.lower(action), string.lower(search)) or
 			string.find(string.lower(EPB), string.lower(search)) or
