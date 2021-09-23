@@ -1,7 +1,20 @@
-# Classic EPGP
-**Do not redistribute this addon. Post a link to this github page instead**
+# Classic EPGP <LORE>
 
-CEPGP Support Discord: https://discord.gg/7mG4GAr
+Merger of CEPGP, CEPGP-TBC, and CEPGP_DistributionFromBags, many thanks to Alumium, Tragalix , Apollo@Taiwan for their hard work on these addons!
+
+
+These addons are no longer being maintained for TBC-Classic, but their original links are below:
+
+https://www.curseforge.com/wow/addons/tbc-classic-epgp-distributionfrombags
+
+https://www.curseforge.com/wow/addons/cepgp
+
+https://www.curseforge.com/wow/addons/cepgp-tbc
+
+
+The addon continues to be modified and updated as Classic progresses.
+
+Original README text:
 
 An addon designed to handle your guild's EPGP standings by storing the respective values in your Officer Notes. Another primary function of the addon is to handle loot moderation which you must be the master looter to utilise.
 
@@ -46,10 +59,18 @@ The following commands can be used to get EPGP reports.
 | Standby EP         | EP awarded to guild members that are not in the raid.                                                        |
 | Standby EP Percent | The percent of standard EP allocation should awarded to standby members.                                     |
 
-## Installation
 
-1. Download this addon 
-2. Extract it to ../Interface/AddOns/ 
-3. Rename the extracted folder from cepgp-retail-master to cepgp
+# CEPGP Distribution From Bags
 
-Author: Alumian
+CEPGP DistributionFromBags is a plugin of CEPGP addon.\
+The Loot Master can start loot distribution process from the inventory.\
+This would allow the Loot Master to grab all items on all bosses, and make distribution at the end of the raid.\
+When the "bid" part is finished, the Loot Master need to give items manually.
+
+# How to use
+
+1. Type /dfb to show up the window
+2. When the window is on screen, Shift+Click an item in inventory to start the distribution process.
+3. Click on the winner
+4. Manually trade with the winner (put the equipment in the first slot of the trading window)
+5. Choose the reason and record the GP points
