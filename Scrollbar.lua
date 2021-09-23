@@ -593,7 +593,7 @@ function CEPGP_UpdateTrafficScrollBar()
 				end
 			end
 
-		elseif search ~= "" and (string.find(string.lower(search), "name:")) then -- keyword search
+		elseif search ~= "" and (string.find(string.lower(search), "player:")) then -- keyword search
 
 			tmp,name_result = string.match(string.lower(search), "(.*):(.*)")  -- isolate search phrase
 			if name ~= "" and name_result ~= "" then
