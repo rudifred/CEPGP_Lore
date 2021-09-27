@@ -1288,13 +1288,13 @@ function CEPGP_calcGP(link, quantity, id)
 			for _, k in pairs(CEPGP_pattern_map) do  -- if pattern doesn't require vortex its in pattern_map
 				if tonumber(_) == tonumber(id) then
 					subid = k; -- sub actual item id
-					print (" found sub id ");
+					--print (" found sub id ");
 					break;
 				end
 			end
 			for _, k in pairs(CEPGP_vortex_map) do  -- if pattern requires vortex return 0 GP immediately
 				if tonumber(_) == tonumber(id) then
-					print (" found nether id ");
+					--print (" found nether id ");
 					return 0;
 				end
 			end
