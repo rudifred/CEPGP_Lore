@@ -1215,15 +1215,18 @@ function CEPGP_calcGP(link, quantity, id)
 	if not name and CEPGP_itemExists(tonumber(id)) then
 		local item = Item:CreateFromItemID(tonumber(id));
 		item:ContinueOnItemLoad(function()
-			name, link, rarity, ilvl, itemType, subType, _, _, slot, _, _, classID, subClassID = GetItemInfo(id);
+			subid=id;
+
+			name, link, rarity, ilvl, itemType, subType, _, _, slot, _, _, classID, subClassID = GetItemInfo(subid);
+
 			if CEPGP_Lore.Overrides[name] then return CEPGP_Lore.Overrides[name]; end
-			if CEPGP_Lore.Overrides[CEPGP_getItemLink(id)] then return CEPGP_Lore.Overrides[CEPGP_getItemLink(id)]; end
+			if CEPGP_Lore.Overrides[CEPGP_getItemLink(subid)] then return CEPGP_Lore.Overrides[CEPGP_getItemLink(subid)]; end
 			
 			for _, k in pairs(CEPGP_tokens) do
 				for slotName, v in pairs(k) do
-					if k[slotName][tonumber(id)] then
+					if k[slotName][tonumber(subid)] then
 						slot = "INVTYPE_" .. string.upper(slotName);
-						ilvl = k[slotName][tonumber(id)];
+						ilvl = k[slotName][tonumber(subid)];
 						rarity = (rarity == 3 and 4 or rarity);
 						break;
 					end
@@ -1256,7 +1259,7 @@ function CEPGP_calcGP(link, quantity, id)
 			
 			for raid, data in pairs(CEPGP_ItemDomain) do
 				for _, _id in pairs(data) do
-					if tonumber(id) == _id then
+					if tonumber(subid) == _id then
 						raidScaling = CEPGP_Lore.GP.RaidModifiers[raid]/100;
 						break;
 					end
@@ -1272,23 +1275,43 @@ function CEPGP_calcGP(link, quantity, id)
 	else
 		if not ilvl then ilvl = 0; end
 		
+		-- overrides always checked first
 		if CEPGP_Lore.Overrides[name] then return CEPGP_Lore.Overrides[name]; end
 		if CEPGP_Lore.Overrides[CEPGP_getItemLink(id)] then return CEPGP_Lore.Overrides[CEPGP_getItemLink(id)]; end
-		--local compare = "item[%-?" .. id .. ":]+";
-		--return CEPGP_Lore.Overrides[compare];
-		
-		--for k, v in pairs(CEPGP_Lore.Overrides) do
-		
-			--[[local compName = GetItemInfo(k);
-			if compName == name then
-				return v;
-			end]]
-		--end
+
+		-- if this item is a pattern, it requires special handling
+		-- patterns that require nether vortex automatically cost 0 GP
+		-- patterns that do not, inherit the GP of the item created
+		local subid=nil;
+
+		if subType == "Recipe" then -- only applies for patterns
+			for _, k in pairs(CEPGP_pattern_map) do  -- if pattern doesn't require vortex its in pattern_map
+				if tonumber(_) == tonumber(id) then
+					subid = k; -- sub actual item id
+					print (" found sub id ");
+					break;
+				end
+			end
+			for _, k in pairs(CEPGP_vortex_map) do  -- if pattern requires vortex return 0 GP immediately
+				if tonumber(_) == tonumber(id) then
+					print (" found nether id ");
+					return 0;
+				end
+			end
+		end
+
+		if not subid then
+			subid=id;
+		end
+
+
+		name, link, rarity, ilvl, itemType, subType, _, _, slot, _, _, classID, subClassID = GetItemInfo(subid);
+
 		for _, k in pairs(CEPGP_tokens) do
 			for slotName, v in pairs(k) do
-				if k[slotName][tonumber(id)] then
+				if k[slotName][tonumber(subid)] then
 					slot = "INVTYPE_" .. string.upper(slotName);
-					ilvl = k[slotName][tonumber(id)];
+					ilvl = k[slotName][tonumber(subid)];
 					rarity = (rarity == 3 and 4 or rarity);
 					break;
 				end
@@ -1322,7 +1345,7 @@ function CEPGP_calcGP(link, quantity, id)
 
 		for raid, data in pairs(CEPGP_ItemDomain) do
 			for _, _id in pairs(data) do
-				if tonumber(id) == _id then
+				if tonumber(subid) == _id then
 					raidScaling = CEPGP_Lore.GP.RaidModifiers[raid]/100;
 					break;
 				end
