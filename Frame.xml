@@ -1655,6 +1655,8 @@
 				<Scripts>
 					<OnClick>
 						CEPGP_Lore.GP.ClassApply["MHOHTank"] = self:GetChecked();
+						local gpValue = tonumber(_G["CEPGP_distribute_GP_value"]:GetText());
+
 						if self:GetChecked() then
 							CEPGP_MHOHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHHunter"] = false;
 							CEPGP_OHOffhand_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OHOffhand"] = false;
@@ -1662,6 +1664,9 @@
 							CEPGP_2HHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["2HHunter"] = false;
 							CEPGP_OfHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OfHHunter"] = false;
 							CEPGP_RangedNonhunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["RangedNonhunter"] = false;
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue*CEPGP_Lore.GP.ClassWeights["MHOHTank"] .. "\n(Standard Price)");
+						else
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue .. "\n(Standard Price)");
 						end
 					</OnClick>
 					<OnEnter>
@@ -1693,6 +1698,8 @@
 				<Scripts>
 					<OnClick>
 						CEPGP_Lore.GP.ClassApply["MHOHHunter"] = self:GetChecked();
+						local gpValue = tonumber(_G["CEPGP_distribute_GP_value"]:GetText());
+
 						if self:GetChecked() then
 							CEPGP_MHOHTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHTank"] = false;
 							CEPGP_OHOffhand_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OHOffhand"] = false;
@@ -1700,6 +1707,9 @@
 							CEPGP_2HHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["2HHunter"] = false;
 							CEPGP_OfHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OfHHunter"] = false;
 							CEPGP_RangedNonhunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["RangedNonhunter"] = false;
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue*CEPGP_Lore.GP.ClassWeights["MHOHHunter"] .. "\n(Adjusted Price)");
+						else
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue .. "\n(Standard Price)");
 						end
 					</OnClick>
 					<OnEnter>
@@ -1731,6 +1741,8 @@
 				<Scripts>
 					<OnClick>
 						CEPGP_Lore.GP.ClassApply["OHOffhand"] = self:GetChecked();
+						local gpValue = tonumber(_G["CEPGP_distribute_GP_value"]:GetText());
+
 						if self:GetChecked() then
 							CEPGP_MHOHTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHTank"] = false;
 							CEPGP_MHOHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHHunter"] = false;
@@ -1738,6 +1750,9 @@
 							CEPGP_2HHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["2HHunter"] = false;
 							CEPGP_OfHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OfHHunter"] = false;
 							CEPGP_RangedNonhunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["RangedNonhunter"] = false;
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue*CEPGP_Lore.GP.ClassWeights["OHOffhand"] .. "\n(Adjusted Price)");
+						else
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue .. "\n(Standard Price)");
 						end
 					</OnClick>
 					<OnEnter> 
@@ -1769,6 +1784,8 @@
 				<Scripts>
 					<OnClick>
 						CEPGP_Lore.GP.ClassApply["ShTank"] = self:GetChecked();
+						local gpValue = tonumber(_G["CEPGP_distribute_GP_value"]:GetText());
+
 						if self:GetChecked() then
 							CEPGP_MHOHTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHTank"] = false;
 							CEPGP_MHOHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHHunter"] = false;
@@ -1776,6 +1793,9 @@
 							CEPGP_2HHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["2HHunter"] = false;
 							CEPGP_OfHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OfHHunter"] = false;
 							CEPGP_RangedNonhunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["RangedNonhunter"] = false;
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue*CEPGP_Lore.GP.ClassWeights["ShTank"] .. "\n(Adjusted Price)");
+						else
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue .. "\n(Standard Price)");
 						end
 					</OnClick>
 					<OnEnter>
@@ -1807,6 +1827,8 @@
 				<Scripts>
 					<OnClick>
 						CEPGP_Lore.GP.ClassApply["2HHunter"] = self:GetChecked();
+						local gpValue = tonumber(_G["CEPGP_distribute_GP_value"]:GetText());
+
 						if self:GetChecked() then
 							CEPGP_MHOHTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHTank"] = false;
 							CEPGP_MHOHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHHunter"] = false;
@@ -1814,6 +1836,9 @@
 							CEPGP_ShTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["ShTank"] = false;
 							CEPGP_OfHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OfHHunter"] = false;
 							CEPGP_RangedNonhunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["RangedNonhunter"] = false;
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue*CEPGP_Lore.GP.ClassWeights["2HHunter"] .. "\n(Adjusted Price)");
+						else
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue .. "\n(Standard Price)");
 						end
 					</OnClick>
 					<OnEnter>
@@ -1845,6 +1870,8 @@
 				<Scripts>
 					<OnClick>
 						CEPGP_Lore.GP.ClassApply["OfHHunter"] = self:GetChecked();
+						local gpValue = tonumber(_G["CEPGP_distribute_GP_value"]:GetText());
+
 						if self:GetChecked() then
 							CEPGP_MHOHTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHTank"] = false;
 							CEPGP_MHOHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHHunter"] = false;
@@ -1852,6 +1879,9 @@
 							CEPGP_ShTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["ShTank"] = false;
 							CEPGP_2HHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["2HHunter"] = false;
 							CEPGP_RangedNonhunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["RangedNonhunter"] = false;
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue*CEPGP_Lore.GP.ClassWeights["OfHHunter"] .. "\n(Adjusted Price)");
+						else
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue .. "\n(Standard Price)");
 						end
 					</OnClick>
 					<OnEnter>
@@ -1883,6 +1913,8 @@
 				<Scripts>
 					<OnClick>
 						CEPGP_Lore.GP.ClassApply["RangedNonhunter"] = self:GetChecked();
+						local gpValue = tonumber(_G["CEPGP_distribute_GP_value"]:GetText());
+
 						if self:GetChecked() then
 							CEPGP_MHOHTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHTank"] = false;
 							CEPGP_MHOHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["MHOHHunter"] = false;
@@ -1890,6 +1922,9 @@
 							CEPGP_ShTank_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["ShTank"] = false;
 							CEPGP_2HHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["2HHunter"] = false;
 							CEPGP_OfHHunter_option:SetChecked(false); CEPGP_Lore.GP.ClassApply["OfHHunter"] = false;
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue*CEPGP_Lore.GP.ClassWeights["RangedNonhunter"] .. "\n(Adjusted Price)");
+						else
+							CEPGP_distribute_popup_gp_full:SetText("Give for " .. gpValue .. "\n(Standard Price)");
 						end
 					</OnClick>
 					<OnEnter>

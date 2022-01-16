@@ -247,7 +247,7 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 			CEPGP_initialise();
 			CEPGP_initMinimapIcon();
 			CEPGP_TBC_initialise();
-			ShowUIPanel(CEPGP_distribute_popup);
+			--ShowUIPanel(CEPGP_distribute_popup);
 			return;
 		end);
 		
