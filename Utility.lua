@@ -775,6 +775,41 @@ function CEPGP_initSavedVars()
 		["EXCEPTION"] = 1
 	};
 	
+	local classDefaults = {
+		["MHOHTank"] = .333,
+		["MHOHHunter"] = .167,
+		["OHOffhand"] = .333,
+		["ShTank"] = 3,
+		["2HHunter"] = .25,
+		["OfHHunter"] = .5,
+		["RangedNonhunter"] = .25,
+	};
+
+	local classApply = {
+		["MHOHTank"] = false,
+		["MHOHHunter"] = false,
+		["OHOffhand"] = false,
+		["ShTank"] = false,
+		["2HHunter"] = false,
+		["OfHHunter"] = false,
+		["RangedNonhunter"] = false,
+	};
+
+	--[[Rudifred
+		So if it's a MAINHAND:
+		NORMAL - TANK /3  - Hunter /6
+		[11:39 AM] Rudifred: ONEHAND:
+		NORMAL - OFFHAND /3 - TANK /3  - Hunter /6
+		[11:43 AM] Rudifred: SHIELD:
+		NONTANK - TANK *3
+		[11:43 AM] Rudifred: 2 HAND:
+		NORMAL - HUNTER /4
+		[11:43 AM] Rudifred: OFF HAND:
+		NORMAL - Hunter /2
+		[11:44 AM] Rudifred: BOW/GUN/XBOW:
+		HUNTER - NONHUNTER /4
+	]]--
+
 	CEPGP_Lore.GP = CEPGP_Lore.GP or {};
 	
 	CEPGP_Lore.GP.Base = CEPGP_Lore.GP.Base or 4.83;
@@ -782,11 +817,21 @@ function CEPGP_initSavedVars()
 	CEPGP_Lore.GP.Mod = CEPGP_Lore.GP.Mod or 1;
 	CEPGP_Lore.GP.Multiplier = CEPGP_Lore.GP.Multiplier or 2;
 	CEPGP_Lore.GP.SlotWeights = CEPGP_Lore.GP.SlotWeights or {};
-	
+	CEPGP_Lore.GP.ClassWeights = CEPGP_Lore.GP.ClassWeights or {};
+	CEPGP_Lore.GP.ClassApply = CEPGP_Lore.GP.ClassApply or {};
+
 	for slot, weight in pairs(slotDefaults) do
 		CEPGP_Lore.GP.SlotWeights[slot] = CEPGP_Lore.GP.SlotWeights[slot] or slotDefaults[slot];
 	end
 	
+	for class, weight in pairs(classDefaults) do
+		CEPGP_Lore.GP.ClassWeights[class] = CEPGP_Lore.GP.ClassWeights[class] or classDefaults[class];
+	end
+	
+	for class, apply in pairs(classApply) do
+		CEPGP_Lore.GP.ClassApply[class] = CEPGP_Lore.GP.ClassApply[class] or classApply[class];
+	end
+
 	CEPGP_Lore.GP.SlotWeights["RANGEDRIGHT"] = nil;
 	
 	CEPGP_Lore.Overrides = CEPGP_Lore.Overrides or {};
@@ -3027,6 +3072,10 @@ function CEPGP_toggleGPEdit(mode)
 				_G["CEPGP_options_" .. k .. "_weight"]:Enable();
 			end
 		end
+
+		for k, v in pairs(CEPGP_Lore.GP.ClassWeights) do
+			_G["CEPGP_options_" .. k .. "_weight"]:Enable();
+		end
 	else
 		CEPGP_options_coef_edit:Disable();
 		CEPGP_options_coef_2_edit:Disable();
@@ -3045,6 +3094,10 @@ function CEPGP_toggleGPEdit(mode)
 			if k ~= "ROBE" and k ~= "EXCEPTION" then
 				_G["CEPGP_options_" .. k .. "_weight"]:Disable();
 			end
+		end
+
+		for k, v in pairs(CEPGP_Lore.GP.ClassWeights) do
+			_G["CEPGP_options_" .. k .. "_weight"]:Disable();
 		end
 	end
 end

@@ -207,7 +207,7 @@ CEPGP_Info = {
 		Source =				""
 	},
 	Version = 					{
-		Number =				"1.18.1",
+		Number =				"2.0.0",
 		Build =					"Release",
 		List =					{
 		},
@@ -247,6 +247,7 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 			CEPGP_initialise();
 			CEPGP_initMinimapIcon();
 			CEPGP_TBC_initialise();
+			ShowUIPanel(CEPGP_distribute_popup);
 			return;
 		end);
 		
@@ -380,23 +381,21 @@ function CEPGP_OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, ar
 			if event == "ENCOUNTER_END" and arg5 == 1 then
 				local id = tonumber(arg1);
 				local name = CEPGP_EncounterInfo.ID[id];
-				if CEPGP_Info.Debug2 then
-					print("copy this part!=====================");
-					print(event);
-					print(arg1);
-					print(arg5);
-					print(id);
-					print(name);
-					print(CEPGP_Lore.EP.AutoAward[name]);
-					print(CEPGP_Lore.EP.BossEP[name])
-					print("copy this part!=====================");
-				end
 				if name then
 					if CEPGP_Lore.EP.AutoAward[name] and tonumber(CEPGP_Lore.EP.BossEP[name]) > 0 then
 						CEPGP_handleCombat(name);
 					end
 				end
 				return;
+			end
+			if event == "UNIT_DIED" and arg6 == "Hydross the Unstable" then
+				print("HYDROSS DEAD!=====================");
+				print(event);
+				print(arg6);
+				local name = CEPGP_EncounterInfo.ID[623] -- Hydross is id 623
+				if CEPGP_Lore.EP.AutoAward[name] and tonumber(CEPGP_Lore.EP.BossEP[name]) > 0 then
+					print("Here is where I would handlecombat!");
+				end
 			end
 		end
 		

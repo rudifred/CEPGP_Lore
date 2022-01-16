@@ -1132,6 +1132,74 @@
 		</Scripts>
 	</EditBox>
 	
+	<EditBox name="classWeightInputBoxTemplate" inherits="InputBoxTemplate" minvalue="0.0" virtual="true">
+		<Size>
+			<AbsDimension x="50" y="5" />
+		</Size>
+		<HitRectInsets>
+			<AbsInset left="0" right="2" top="-5" bottom="0" />
+		</HitRectInsets>
+		<Attributes>
+			<Attribute name="topLevel" type="boolean" value="false" />
+		</Attributes>
+		<Layers>
+			<Layer level="OVERLAY">
+				<FontString name="$parent_string" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT" y="10"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self:SetAutoFocus(false);
+				
+				local fString = _G[self:GetName() .. "_string"];
+				local classes = {
+					["MHOHTank"] =					"[Warrior] Tank Weapon",
+					["MHOHHunter"] =				"[Hunter] Mainhand or Onehand",
+					["OHOffhand"] =					"[Melee] Onehand->OffHand",
+					["ShTank"] =					"[Warrior] Tank Shield",
+					["2HHunter"] =					"[Hunter] Twohand",
+					["OfHHunter"] =					"[Hunter] Offhand",
+					["RangedNonhunter"] =			"Non-Hunter ranged bow/gun/xbow",
+
+				}
+				
+				local class = strsub(self:GetName(), 15, strfind(self:GetName(), "_weight")-1);
+				
+				fString:SetText(classes[class]);
+				
+				local topFrame = self:GetAttribute("topLevel");
+				
+				if topFrame then return; end
+				
+				local point, parent, relPoint, x, y = self:GetPoint();
+				y = y - fString:GetStringHeight();
+				
+				self:SetPoint(point, parent, relPoint, x, y);
+			</OnLoad>
+			<OnShow>
+				local class = strsub(self:GetName(), 15, strfind(self:GetName(), "_weight")-1);
+				local value = CEPGP_Lore.GP.ClassWeights[class];
+				self:SetText(value);
+			</OnShow>
+			<OnEnterPressed>
+				self:ClearFocus();
+			</OnEnterPressed>
+			<OnEditFocusLost>
+				self:HighlightText(0,0);
+				local class = string.sub(self:GetName(), 15, string.find(self:GetName(), "_weight")-1);
+				local value = self:GetText();
+				if CEPGP_isNumber(self:GetText()) and CEPGP_Lore.GP.ClassWeights[class] ~= tonumber(value) then
+					CEPGP_Lore.GP.ClassWeights[class] = tonumber(value);
+				else
+					self:SetText(CEPGP_Lore.GP.ClassWeights[class]);
+				end
+			</OnEditFocusLost>
+		</Scripts>
+	</EditBox>
 	<CheckButton name="AutoAwardEPCheckBox" inherits="UIOptionsCheckButtonTemplate" virtual="true">
 		<HitRectInsets>
 			<AbsInset left="0" right="0" top="0" bottom="0" />

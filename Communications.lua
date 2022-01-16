@@ -806,6 +806,11 @@ function CEPGP_ExportConfig(player)
 			for slot, weight in pairs(CEPGP_Lore.GP.SlotWeights) do
 				CEPGP_addAddonMsg("ExportConfig;GP;SlotWeights;" .. slot .. ";" .. weight, channel, player);
 			end
+
+			for class, weight in pairs(CEPGP_Lore.GP.ClassWeights) do
+				CEPGP_addAddonMsg("ExportConfig;GP;ClassWeights;" .. class .. ";" .. weight, channel, player);
+			end
+
 			CEPGP_addAddonMsg("ExportConfig;ImportComplete;" .. _option, channel, player);
 			completed = completed + 1;
 		
@@ -1029,6 +1034,11 @@ function CEPGP_SyncConfig()
 							for slot, weight in pairs(CEPGP_Lore.GP.SlotWeights) do
 								CEPGP_addAddonMsg("ExportConfig;GP;SlotWeights;" .. slot .. ";" .. weight, channel, player);
 							end
+
+							for class, weight in pairs(CEPGP_Lore.GP.ClassWeights) do
+								CEPGP_addAddonMsg("ExportConfig;GP;ClassWeights;" .. class .. ";" .. weight, channel, player);
+							end
+							
 							CEPGP_addAddonMsg("ExportConfig;ImportComplete;GP", channel, player);
 							
 							CEPGP_print("Successfully exported GP configuration");
@@ -1306,6 +1316,9 @@ function CEPGP_OverwriteOption(args, sender, channel)
 				CEPGP_Lore.GP[setting][index] = value;
 				if setting == "SlotWeights" then
 					CEPGP_Lore.GP.SlotWeights[index] = value;
+				end
+				if setting == "ClassWeights" then
+					CEPGP_Lore.GP.ClassWeights[index] = value;
 				end
 			else
 				value = sanitise(args[4]);

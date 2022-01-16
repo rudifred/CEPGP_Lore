@@ -77,9 +77,9 @@ function CEPGP_handleComms(event, arg1, arg2, response, lootGUID)
 					if inGuild and not CEPGP_Lore.Loot.SuppressResponses then
 						if (CEPGP_getResponse(arg1) or CEPGP_getResponseIndex(arg1) or response < 5) then
 							if CEPGP_Lore.Loot.RollAnnounce then
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (" .. PR .. " PR) (Rolled " .. roll .. ")", CEPGP_Lore.LootChannel);
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") selects (" .. reason .. "). (" .. PR .. " PR) (Rolled " .. roll .. ")", CEPGP_Lore.LootChannel);
 							else
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (" .. PR .. " PR)", CEPGP_Lore.LootChannel);
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") selects (" .. reason .. "). (" .. PR .. " PR)", CEPGP_Lore.LootChannel);
 							end
 						end
 					elseif not CEPGP_Lore.Loot.SuppressResponses then
@@ -91,9 +91,9 @@ function CEPGP_handleComms(event, arg1, arg2, response, lootGUID)
 						end
 						if (CEPGP_getResponse(arg1) or CEPGP_getResponseIndex(arg1) or response < 5) then
 							if CEPGP_Lore.Loot.RollAnnounce then
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (Non-guild member) (Rolled " .. roll .. ")", CEPGP_Lore.LootChannel);
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") selects (" .. reason .. "). (Non-guild member) (Rolled " .. roll .. ")", CEPGP_Lore.LootChannel);
 							else
-								CEPGP_sendChatMessage(name .. " (" .. class .. ") needs (" .. reason .. "). (Non-guild member)", CEPGP_Lore.LootChannel);
+								CEPGP_sendChatMessage(name .. " (" .. class .. ") selects (" .. reason .. "). (Non-guild member)", CEPGP_Lore.LootChannel);
 							end
 						end
 					end
@@ -257,6 +257,24 @@ function CEPGP_handleCombat(name)
 	end
 end
 
+local yes_no = false;
+
+StaticPopupDialogs["YES_NO"] = {
+  text = "",
+  button1 = "Yes",
+  button2 = "No",
+  OnButton1 = function()
+      yes_no=true
+  end,
+  OnButton2 = function()
+      yes_no=false
+  end,
+  timeout = 0,
+  whileDead = true,
+  hideOnEscape = true,
+  preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+}
+
 function CEPGP_handleLoot(event, arg1, arg2)
 	if event == "LOOT_CLOSED" then
 		CEPGP_Info.Loot.Open = false;
@@ -342,6 +360,16 @@ function CEPGP_handleLoot(event, arg1, arg2)
 				if player ~= "" and award then
 					if response == "" then response = nil; end
 					
+					for class, apply in pairs(CEPGP_Lore.GP.ClassApply) do
+						--print (gpValue);
+
+						if apply then
+							gpValue = gpValue*CEPGP_Lore.GP.ClassWeights[class]
+							--print ("applying gp rate");
+							--print (gpValue);
+						end
+
+					end
 					if distGP then
 						if response then
 							local message = "Awarded " .. itemName .. " to ".. player .. " for " .. gpValue*rate .. " GP (" .. response .. ")";
