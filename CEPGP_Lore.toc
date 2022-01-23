@@ -3,7 +3,7 @@
 ## Interface:20501
 ## Title: CEPGP <Lore>
 ## Author: Krypte-Myzrael, Rudifred-Myzrael
-## Version: 2.0.1
+## Version: 2.0.2
 ## Notes: Usage: /CEPGP or /cep for options
 ## OptionalDependencies: AceAddon-3.0, AceComm-3.0, CallbackHandler-1.0, LibDataBroker-1.1, LibDBIcon-1.0, LibStub
 ## SavedVariables: CEPGP_Lore, CEPGP_DFB_No_Trade, CEPGP_DFB_Enabled
