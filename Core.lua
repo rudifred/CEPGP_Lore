@@ -735,6 +735,13 @@ function CEPGP_addGuildEP(amount, msg)
 			else
 				if msg ~= "" and msg ~= nil then
 					CEPGP_sendChatMessage(amount .. " EP awarded to all guild members (" .. msg .. ")", CEPGP_Lore.Channel);
+--
+--					local guildies_string = "";
+--					for name, data in pairs(CEPGP_Info.Guild.Roster) do
+--						guildies_string = guildies_string .. " " .. name;
+--					end
+--					print(guildies_string);
+--
 					CEPGP_addTraffic("Guild", UnitName("player"), "Add Guild EP +" .. amount .. " (" .. msg .. ")", "", "", "", "", "", time());
 				else
 					CEPGP_sendChatMessage(amount .. " EP awarded to all guild members", CEPGP_Lore.Channel);

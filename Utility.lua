@@ -1330,16 +1330,14 @@ function CEPGP_calcGP(link, quantity, id)
 		local subid=nil;
 
 		if subType == "Recipe" then -- only applies for patterns
-			for _, k in pairs(CEPGP_pattern_map) do  -- if pattern doesn't require vortex its in pattern_map
+			for _, k in pairs(CEPGP_pattern_map) do  -- if pattern doesn't require vortex/heart of darkness its in pattern_map
 				if tonumber(_) == tonumber(id) then
 					subid = k; -- sub actual item id
-					--print (" found sub id ");
 					break;
 				end
 			end
-			for _, k in pairs(CEPGP_vortex_map) do  -- if pattern requires vortex return 0 GP immediately
-				if tonumber(_) == tonumber(id) then
-					--print (" found nether id ");
+			for _, k in pairs(CEPGP_raidmats_map) do  -- if pattern requires vortex/heart of darkness return 0 GP immediately
+				if tonumber(_) == tonumber(id) then -- additionally if this a JC pattern from Hyjal, return 0
 					return 0;
 				end
 			end
@@ -3265,7 +3263,7 @@ function CEPGP_addTraffic(target, source, desc, EPB, EPA, GPB, GPA, itemID, tSta
 	GPB = GPB or "";
 	GPA = GPA or "";
 	itemID = itemID or "";
-	tStamp = tstamp or time();
+	tStamp = tStamp or time();
 	
 	
 	if CEPGP_itemExists(tonumber(itemID)) then
