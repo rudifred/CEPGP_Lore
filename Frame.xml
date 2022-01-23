@@ -13348,7 +13348,7 @@
 													<AbsInset left="0" right="0" top="0" bottom="0" />
 												</HitRectInsets>
 												<Anchors>
-													<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CEPGP_options_standby_ep_message_val_label" x="-30" />
+													<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="CEPGP_options_standby_ep_message_val_label" x="0" />
 												</Anchors>
 												<Layers>
 													<Layer level="OVERLAY">	
