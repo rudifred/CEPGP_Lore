@@ -179,6 +179,12 @@ CEPGP_pattern_map = { -- BOE Patterms = BOP items from raid
 	[35521] = 32579,
 	[32749] = 32575,
 	[35524] = 32575,
+
+	[32739] = 32573, -- dawnsteel shoulders
+	[35530] = 32573,
+	[32737] = 32570, -- swiftsteel shoulders
+	[35532] = 32570,
+
 	[32745] = 32583,
 	[35523] = 32583,
 	[32747] = 32581,
